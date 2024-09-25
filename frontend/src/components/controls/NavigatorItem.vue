@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -8,18 +8,27 @@ const props = defineProps<{
 }>();
 
 const route = useRoute();
+const router = useRouter();
 
 const isActive = computed(() => {
   return route.path === props.to;
 });
+
+function navigate() {
+  router.push(props.to);
+}
 </script>
 
 <template>
-  <div :style="{ 'border-bottom': isActive ? '#F18787 4px solid' : 'transparent 4px solid' }" class="navigator_container">
+  <div
+      @click="navigate"
+      :style="{ 'border-bottom': isActive ? '#F18787 4px solid' : 'transparent 4px solid' }"
+      class="navigator_container"
+  >
     <div style="width: 30px; height: 30px;">
       <slot></slot>
     </div>
-    <router-link :to="to" class="link">{{ content }}</router-link>
+    <span class="link">{{ content }}</span>
   </div>
 </template>
 
@@ -40,5 +49,6 @@ const isActive = computed(() => {
   align-items: center;
   height: 100%;
   margin-left: 2.5rem;
+  cursor: pointer;
 }
 </style>
