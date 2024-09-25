@@ -3,6 +3,7 @@
 #app {
   margin: 0 auto;
   font-weight: normal;
+  height: 100vh;
 }
 
 a,
@@ -13,9 +14,10 @@ a,
   padding: 3px;
 }
 
-body {
+.container {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.80) 0%, #FFF 100%),
   url('../assets/home.jpg') lightgray 50% / cover no-repeat;
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
