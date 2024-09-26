@@ -30,7 +30,7 @@ func AllMedals(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, err, consts2.ERROR)
 		return
 	}
-	resp.Data = pack.WrapOlympicsData(userResp)
+	resp.Data = pack.WrapOlympicsData(userResp, req.MedalSorts)
 	pack.SendResponse(c, resp, consts.StatusOK)
 }
 

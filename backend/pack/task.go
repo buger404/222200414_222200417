@@ -10,15 +10,15 @@ import (
 )
 
 // WrapOlympicsData 将 OlympicsData 转换为 AllMedalsResp
-func WrapOlympicsData(olympicsData *spiderModel.OlympicsData) *model.MedalRank {
+func WrapOlympicsData(olympicsData *spiderModel.OlympicsData, medalSorts int64) *model.MedalRank {
 	return &model.MedalRank{
 		// 根据 Medals 结构体定义填充数据
-		Details: convertToMedals(olympicsData),
+		Details: convertToMedals(olympicsData, medalSorts),
 	}
 }
 
 // convertToMedals 将 MedalsData 转换为 model.Medals 并进行排序
-func convertToMedals(medalsData *spiderModel.OlympicsData) []*model.Medal {
+func convertToMedals(medalsData *spiderModel.OlympicsData, medalSorts int64) []*model.Medal {
 	// 创建存储奖牌条目的切片
 	var entries []*model.Medal
 
@@ -37,7 +37,7 @@ func convertToMedals(medalsData *spiderModel.OlympicsData) []*model.Medal {
 		// 累加该国家在所有 discipline 下的奖牌信息
 		for _, discipline := range medalEntry.Disciplines {
 			countryMedals.Gold += int64(discipline.Gold)
-			countryMedals.Sliver += int64(discipline.Silver) // 拼写修正：Sliver -> Silver
+			countryMedals.Sliver += int64(discipline.Silver)
 			countryMedals.Bronze += int64(discipline.Bronze)
 			countryMedals.Total += int64(discipline.Total)
 		}
@@ -53,19 +53,32 @@ func convertToMedals(medalsData *spiderModel.OlympicsData) []*model.Medal {
 		entries = append(entries, entry)
 	}
 
-	// 根据 Total, Gold, Silver, Bronze 进行排序
-	sort.Slice(entries, func(i, j int) bool {
-		if entries[i].List.Total != entries[j].List.Total {
+	// 根据 medalSorts 进行排序
+	switch medalSorts {
+	case 0:
+		// 按金牌、银牌、铜牌顺序排序
+		sort.Slice(entries, func(i, j int) bool {
+			if entries[i].List.Gold != entries[j].List.Gold {
+				return entries[i].List.Gold > entries[j].List.Gold
+			}
+			if entries[i].List.Sliver != entries[j].List.Sliver {
+				return entries[i].List.Sliver > entries[j].List.Sliver
+			}
+			return entries[i].List.Bronze > entries[j].List.Bronze
+		})
+
+	case 1:
+		// 按总奖牌数排序
+		sort.Slice(entries, func(i, j int) bool {
 			return entries[i].List.Total > entries[j].List.Total
-		}
-		if entries[i].List.Gold != entries[j].List.Gold {
-			return entries[i].List.Gold > entries[j].List.Gold
-		}
-		if entries[i].List.Sliver != entries[j].List.Sliver {
-			return entries[i].List.Sliver > entries[j].List.Sliver
-		}
-		return entries[i].List.Bronze > entries[j].List.Bronze
-	})
+		})
+
+	case 2:
+		// 按国家首字母排序
+		sort.Slice(entries, func(i, j int) bool {
+			return entries[i].CountryName < entries[j].CountryName
+		})
+	}
 
 	return entries
 }

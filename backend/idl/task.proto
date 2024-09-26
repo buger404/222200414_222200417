@@ -7,6 +7,7 @@ import "model.proto";
 import "api.proto";
 
 message allMedalsReq{
+  int64 medalSorts = 1;
 }
 
 message allMedalsResp{
