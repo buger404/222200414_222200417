@@ -39,3 +39,17 @@ type PageProps struct {
 type OlympicsData struct {
 	Props PageProps `json:"pageProps"`
 }
+
+type Competitor struct {
+	Name           string `json:"name"`
+	WinnerLoserTie string `json:"winnerLoserTie"`
+	Rating         string `json:"mark"`
+}
+
+type Event struct {
+	StartDate      string        `json:"startDate"`
+	PhaseName      string        `json:"phaseName"`
+	ID             string        `json:"id"`
+	DisciplineName string        `json:"disciplineName"`
+	Competitors    []*Competitor `json:"competitors"`
+}

@@ -9,5 +9,5 @@ func main() {
 
 	register(h)
 	h.Spin()
-	//dal.GetAllMedals()
+	//dal.DailyEvents("08-06")
 }

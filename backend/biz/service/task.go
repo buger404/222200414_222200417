@@ -21,3 +21,7 @@ func NewTaskService(ctx context.Context, c *app.RequestContext) *TaskService {
 func (task *TaskService) AllMedals(ctx context.Context, req *task.AllMedalsReq) (*model.OlympicsData, error) {
 	return dal.GetAllMedals()
 }
+
+func (task *TaskService) DailyEvent(ctx context.Context, req *task.DailyEventReq) ([]*model.Event, error) {
+	return dal.DailyEvents(req.Date)
+}

@@ -12,6 +12,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+// GetAllMedals 获取所有奖牌信息
 func GetAllMedals() (*model.OlympicsData, error) {
 	pageContent, err := fetchPageContent(consts.Url)
 	if err != nil {
@@ -125,4 +126,82 @@ func parseOlympicsData(pageContent string) (*model.OlympicsData, error) {
 	}
 
 	return &data, nil
+}
+
+// DailyEvents 每日赛程
+func DailyEvents(date string) ([]*model.Event, error) {
+	url := "https://sph-s-api.olympics.com/summer/schedules/api/CHI/schedule/day/2024-" + date // 替换为目标网址
+	data, err := fetchPageContent(url)
+	if err != nil {
+		return nil, err
+	}
+	return parseDailyEvents(data)
+}
+
+func parseDailyEvents(data string) ([]*model.Event, error) {
+	var jsonMap map[string]interface{}
+	err := json.Unmarshal([]byte(data), &jsonMap)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse json data: %v", err)
+	}
+
+	groups, ok := jsonMap["units"].([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("failed to assert data")
+	}
+
+	var events []*model.Event // 用于存储所有事件信息
+
+	for _, group := range groups {
+		groupMap, ok := group.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("failed to assert group data")
+		}
+
+		// 获取所需字段
+		phaseName := groupMap["phaseName"].(string)
+		id := groupMap["id"].(string)
+		disciplineName := groupMap["disciplineName"].(string)
+		startDate := groupMap["startDate"].(string)
+
+		// 获取竞争者信息
+		var competitors []*model.Competitor
+		competitorsData, ok := groupMap["competitors"].([]interface{})
+		if ok {
+			for _, competitor := range competitorsData {
+				competitorMap, ok := competitor.(map[string]interface{})
+				if !ok {
+					return nil, fmt.Errorf("failed to assert competitor data")
+				}
+
+				name := competitorMap["name"].(string)
+				results, ok := competitorMap["results"].(map[string]interface{})
+				if !ok {
+					continue
+				}
+				winnerLoserTie, ok := results["winnerLoserTie"].(string)
+				if !ok {
+					continue
+				}
+				rating := results["mark"].(string)
+
+				competitors = append(competitors, &model.Competitor{ // 使用指针
+					Name:           name,
+					WinnerLoserTie: winnerLoserTie,
+					Rating:         rating,
+				})
+			}
+		}
+
+		// 创建一个事件结构体并添加到事件列表
+		events = append(events, &model.Event{ // 使用指针
+			PhaseName:      phaseName,
+			ID:             id,
+			DisciplineName: disciplineName,
+			Competitors:    competitors,
+			StartDate:      startDate,
+		})
+	}
+
+	return events, nil
 }

@@ -21,7 +21,7 @@ func SendResponse(c *app.RequestContext, data interface{}, code int) {
 func BuildBaseReap(err error) *model.BaseResp {
 	if err == nil {
 		return &model.BaseResp{
-			Code: 10000,
+			Code: 200,
 			Msg:  "ok",
 		}
 	}

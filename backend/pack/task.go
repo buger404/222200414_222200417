@@ -3,7 +3,10 @@ package pack
 import (
 	spiderModel "backend/biz/dal/model"
 	"backend/biz/model/model"
+	consts2 "backend/consts"
+	"fmt"
 	"sort"
+	"time"
 )
 
 // WrapOlympicsData 将 OlympicsData 转换为 AllMedalsResp
@@ -44,6 +47,7 @@ func convertToMedals(medalsData *spiderModel.OlympicsData) []*model.Medal {
 	for country, medals := range countryMedalsMap {
 		entry := &model.Medal{
 			CountryName: country,
+			Flag:        consts2.CountryMap[country],
 			List:        medals,
 		}
 		entries = append(entries, entry)
@@ -64,4 +68,56 @@ func convertToMedals(medalsData *spiderModel.OlympicsData) []*model.Medal {
 	})
 
 	return entries
+}
+
+func parseTime(startDate string) string {
+	// 定义 ISO 8601 时间格式
+	layout := "2006-01-02T15:04:05-07:00"
+
+	// 解析时间
+	t, _ := time.Parse(layout, startDate)
+
+	// 提取时和分，并格式化为字符串
+	return t.Format("15:04")
+}
+
+func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
+	var modelEvents []*model.Event
+
+	for _, event := range events {
+		var countries []*model.Country
+		if event.Competitors == nil {
+			continue
+		}
+		// 转换 Competitor 为 Country
+		for _, competitor := range event.Competitors {
+			countries = append(countries, &model.Country{
+				Name:   competitor.Name,
+				Rating: competitor.Rating,
+				Flag:   consts2.CountryMap[competitor.Name], // 如果有旗帜信息，可以在此处填入
+			})
+		}
+
+		var res = 16
+		fmt.Println(event.Competitors[0].WinnerLoserTie)
+		if event.Competitors[0].WinnerLoserTie == "W" {
+			res = 2
+		} else {
+			res = 1
+		}
+
+		// 创建并添加转换后的 Event 到 modelEvents 切片
+		modelEvents = append(modelEvents, &model.Event{
+			Id:        event.ID,
+			Time:      parseTime(event.StartDate),
+			Event:     event.PhaseName,
+			Group:     event.DisciplineName,
+			Countries: countries,
+			Winner:    int64(res),
+		})
+	}
+
+	return &model.DailyEvent{
+		Events: modelEvents,
+	}
 }

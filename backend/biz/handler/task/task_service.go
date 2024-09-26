@@ -41,13 +41,19 @@ func DailyEvent(ctx context.Context, c *app.RequestContext) {
 	var req task.DailyEventReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err, consts2.ErrorBind)
 		return
 	}
 
 	resp := new(task.DailyEventResp)
-
-	c.JSON(consts.StatusOK, resp)
+	resp.Base = pack.BuildBaseReap(nil)
+	userResp, err := service.NewTaskService(ctx, c).DailyEvent(ctx, &req)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Data = pack.ConvertEvent(userResp)
+	pack.SendResponse(c, resp, consts.StatusOK)
 }
 
 // EventTypeList .
