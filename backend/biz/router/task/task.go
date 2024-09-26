@@ -22,13 +22,13 @@ func Register(r *server.Hertz) {
 		{
 			_event := _api.Group("/event", _eventMw()...)
 			_event.GET("/daily", append(_dailyeventMw(), task.DailyEvent)...)
-			_event.DELETE("/list", append(_eventlistMw(), task.EventList)...)
+			_event.GET("/list", append(_eventlistMw(), task.EventList)...)
 			_event.GET("/table", append(_eventtableMw(), task.EventTable)...)
-			_event.POST("/typelist", append(_eventtypelistMw(), task.EventTypeList)...)
+			_event.GET("/typelist", append(_eventtypelistMw(), task.EventTypeList)...)
 		}
 		{
 			_medals := _api.Group("/medals", _medalsMw()...)
-			_medals.POST("/all", append(_allmedalsMw(), task.AllMedals)...)
+			_medals.GET("/all", append(_allmedalsMw(), task.AllMedals)...)
 		}
 	}
 }

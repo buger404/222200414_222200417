@@ -3,9 +3,13 @@
 package task
 
 import (
+	"backend/biz/service"
+	"backend/pack"
 	"context"
 
 	task "backend/biz/model/task"
+
+	consts2 "backend/consts"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -17,13 +21,18 @@ func AllMedals(ctx context.Context, c *app.RequestContext) {
 	var req task.AllMedalsReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err, consts2.ErrorBind)
 		return
 	}
-
-	resp := new(task.AllMedalsReq)
-
-	c.JSON(consts.StatusOK, resp)
+	resp := new(task.AllMedalsResp)
+	resp.Base = pack.BuildBaseReap(nil)
+	userResp, err := service.NewTaskService(ctx, c).AllMedals(ctx, &req)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Data = pack.WrapOlympicsData(userResp)
+	pack.SendResponse(c, resp, consts.StatusOK)
 }
 
 // DailyEvent .

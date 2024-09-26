@@ -11,7 +11,7 @@ message allMedalsReq{
 
 message allMedalsResp{
   model.baseResp base = 1;
-  model.medals data = 2;
+  model.medalRank data = 2;
 }
 
 message dailyEventReq{
@@ -47,9 +47,9 @@ message eventListResp{
 }
 
 service TaskService{
-  rpc AllMedals(allMedalsReq) returns(allMedalsReq){option (api.post) = "api/medals/all";};
+  rpc AllMedals(allMedalsReq) returns(allMedalsReq){option (api.get) = "api/medals/all";};
   rpc DailyEvent(dailyEventReq) returns(dailyEventResp){option (api.get) = "api/event/daily";};
-  rpc EventTypeList(eventTypeListReq) returns(eventTypeListResp){option (api.post) = "api/event/typelist";};
+  rpc EventTypeList(eventTypeListReq) returns(eventTypeListResp){option (api.get) = "api/event/typelist";};
   rpc EventTable(eventTableReq) returns(eventTableResp){option (api.get) = "api/event/table";};
-  rpc EventList(eventListReq) returns(eventListResp){option (api.delete) = "api/event/list";};
+  rpc EventList(eventListReq) returns(eventListResp){option (api.get) = "api/event/list";};
 }

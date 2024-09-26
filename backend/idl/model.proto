@@ -8,17 +8,21 @@ message baseResp{
   string msg = 2;
 }
 
+message medalRank{
+  repeated medal details = 1;
+}
+
 message medal{
   string countryName = 1;
   string flag  = 2;
-  repeated medals list = 3;
+  medals list = 3;
 }
 
 message medals{
-  string gold = 1;
-  string sliver = 2;
-  string bronze = 3;
-  string total = 4;
+  int64 gold = 1;
+  int64 sliver = 2;
+  int64 bronze = 3;
+  int64 total = 4;
 }
 
 message dailyEvent{
