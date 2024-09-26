@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <el-button round class="button">{{ content }}</el-button>
+  <span class="button">{{ content }}</span>
 </template>
 
 <style scoped>
@@ -25,6 +25,7 @@ defineProps<{
   letter-spacing: 0.1px;
 }
 .button:hover {
+  cursor: pointer;
   border-radius: 109px;
   border: 2px solid #000;
   background: #F18787;

@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import Button from "@/components/controls/Button.vue";
+import {useRouter} from "vue-router";
+const router = useRouter();
+
+function navigate(path : string) {
+  router.push(path);
+}
 </script>
 
 <template>
@@ -7,13 +13,26 @@ import Button from "@/components/controls/Button.vue";
     <p class="title">2024 巴黎奥运会</p>
     <p class="subtitle">数据浏览站</p>
     <div class="button_area">
-      <Button content="查看各国奖牌榜" style="margin-right: 100px; width: 272px"></Button>
-      <Button content="关于我们" style="width: 272px"></Button>
+      <Button
+          @click="navigate('/overview')"
+          content="查看各国奖牌榜"
+          style="margin-right: 100px;
+          width: 272px"
+      />
+      <Button content="关于我们" style="width: 272px"/>
     </div>
   </main>
 </template>
 
 <style scoped>
+.container {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.80) 0%, #FFF 100%),
+  url('../assets/home.jpg') lightgray 50% / cover no-repeat;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
 .button_area{
   width: 100%;
   height: 100px;

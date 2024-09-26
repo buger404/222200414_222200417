@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import NavigatorItem from "@/components/controls/NavigatorItem.vue";
 import HomeIcon from "@/components/icons/IconHome.vue";
+import OverviewIcon from "@/components/icons/IconOverview.vue";
 </script>
 
 <template>
@@ -10,15 +11,16 @@ import HomeIcon from "@/components/icons/IconHome.vue";
     <NavigatorItem content="首页" to="/">
       <HomeIcon/>
     </NavigatorItem>
-    <NavigatorItem content="关于" to="/about">
-      <HomeIcon/>
-    </NavigatorItem>
-    <NavigatorItem content="首页" to="/">
-      <HomeIcon/>
+    <NavigatorItem content="概览" to="/overview">
+      <OverviewIcon/>
     </NavigatorItem>
   </header>
 
-  <RouterView />
+  <RouterView v-slot="{ Component }">
+    <transition name="slide" mode="out-in">
+      <component :is="Component"/>
+    </transition>
+  </RouterView>
 </template>
 
 <style scoped>
@@ -26,6 +28,7 @@ header {
   display: flex;
   flex-direction: row;
   position: fixed;
+  z-index: 99999;
   top: 0;
   background: rgba(255, 255, 255, 0.80);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.10);

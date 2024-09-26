@@ -8,11 +8,12 @@ const props = defineProps<{
 }>();
 
 const route = useRoute();
-const router = useRouter();
 
 const isActive = computed(() => {
   return route.path === props.to;
 });
+
+const router = useRouter();
 
 function navigate() {
   router.push(props.to);
