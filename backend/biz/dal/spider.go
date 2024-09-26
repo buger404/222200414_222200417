@@ -276,3 +276,59 @@ func extractEvents(data string) ([]map[string]string, error) {
 
 	return events, nil
 }
+
+func EventTable() {
+
+}
+
+func extractEventsId(data string) ([]string, error) {
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+
+	// 查找包含数据的 <script> 标签
+	scriptTag := doc.Find("script#__NEXT_DATA__").First()
+	if scriptTag.Length() == 0 {
+		return nil, fmt.Errorf("no script tag with JSON data found")
+	}
+
+	jsonData := scriptTag.Text()
+
+	// 将 jsonData 解析为 map 类型
+	var jsonMap map[string]interface{}
+	err = json.Unmarshal([]byte(jsonData), &jsonMap)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse json data: %v", err)
+	}
+
+	medalsTable, ok := jsonMap["props"].(map[string]interface{})["pageProps"].(map[string]interface{})["initialMedals"].(map[string]interface{})["medalStandings"].(map[string]interface{})["medalsTable"].([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("failed to extract medals table from JSON data")
+	}
+
+	// 用于存储最终的事件列表
+	var events []string
+
+	for _, entry := range medalsTable {
+		entryMap := entry.(map[string]interface{})
+
+		// 获取 disciplines 数据
+		disciplines := entryMap["disciplines"].([]interface{})
+		for _, discipline := range disciplines {
+			disciplineMap := discipline.(map[string]interface{})
+			medalWinners, ok := disciplineMap["medalWinners"].([]interface{})
+			if !ok {
+				continue
+			}
+			for _, winner := range medalWinners {
+				winnerMap := winner.(map[string]interface{})
+				eventCode := winnerMap["eventCode"].(string)
+				// 添加到事件列表
+				events = append(events, eventCode)
+			}
+		}
+	}
+
+	return events, nil
+}
