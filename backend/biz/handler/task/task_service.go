@@ -8,7 +8,6 @@ import (
 	consts2 "backend/consts"
 	"backend/pack"
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -51,7 +50,6 @@ func DailyEvent(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, err, consts2.ErrorBind)
 		return
 	}
-	fmt.Println(req.Date)
 	resp := new(task.DailyEventResp)
 	resp.Base = pack.BuildBaseReap(nil)
 	userResp, err := service.NewTaskService(ctx, c).DailyEvent(ctx, &req)
@@ -75,8 +73,17 @@ func EventTypeList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(task.EventTypeListResp)
-
-	c.JSON(consts.StatusOK, resp)
+	userResp, err := service.NewTaskService(ctx, c).EventTypeList(ctx, &req)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Data, err = pack.WrapEventTypeList(userResp)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	pack.SendResponse(c, resp, consts.StatusOK)
 }
 
 // EventTable .

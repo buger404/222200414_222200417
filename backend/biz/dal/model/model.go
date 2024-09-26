@@ -53,3 +53,5 @@ type Event struct {
 	DisciplineName string        `json:"disciplineName"`
 	Competitors    []*Competitor `json:"competitors"`
 }
+
+type EventTypeList []map[string]string

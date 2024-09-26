@@ -9,5 +9,6 @@ func main() {
 
 	register(h)
 	h.Spin()
-	//dal.DailyEvents("08-06")
+	//data, _ := dal.EventTypeList()
+	//fmt.Printf("data:%+v", data)
 }

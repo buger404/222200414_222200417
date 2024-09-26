@@ -132,3 +132,27 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 		Events: modelEvents,
 	}
 }
+
+func WrapEventTypeList(eventTypeData spiderModel.EventTypeList) (*model.EventTypeList, error) {
+	eventTypeList := &model.EventTypeList{}
+
+	// 遍历 eventTypeData 并填充 EventTypeList
+	for _, eventTypeMap := range eventTypeData {
+		id, ok1 := eventTypeMap["id"]
+		name, ok2 := eventTypeMap["name"]
+		if !ok1 || !ok2 {
+			continue // 如果数据缺失，则跳过
+		}
+
+		// 创建一个 EventType 对象并填充数据
+		eventType := &model.EventType{
+			Id:   id,
+			Name: name,
+		}
+
+		// 将 EventType 添加到 EventTypeList
+		eventTypeList.Types = append(eventTypeList.Types, eventType)
+	}
+
+	return eventTypeList, nil
+}
