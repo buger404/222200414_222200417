@@ -35,7 +35,7 @@ function navigate() {
 
 <style scoped>
 .link{
-  margin-left: 0.8rem;
+  margin-left: 1rem;
   color: black;
   text-align: center;
   font-size: 18px;
@@ -51,5 +51,6 @@ function navigate() {
   height: 100%;
   margin-left: 2.5rem;
   cursor: pointer;
+  padding: 0 0.7rem;
 }
 </style>
