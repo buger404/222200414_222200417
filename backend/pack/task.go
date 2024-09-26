@@ -4,13 +4,12 @@ import (
 	spiderModel "backend/biz/dal/model"
 	"backend/biz/model/model"
 	consts2 "backend/consts"
-	"fmt"
 	"sort"
 	"time"
 )
 
 // WrapOlympicsData 将 OlympicsData 转换为 AllMedalsResp
-func WrapOlympicsData(olympicsData *spiderModel.OlympicsData, medalSorts int64) *model.MedalRank {
+func WrapOlympicsData(olympicsData *spiderModel.OlympicsData, medalSorts int) *model.MedalRank {
 	return &model.MedalRank{
 		// 根据 Medals 结构体定义填充数据
 		Details: convertToMedals(olympicsData, medalSorts),
@@ -18,7 +17,7 @@ func WrapOlympicsData(olympicsData *spiderModel.OlympicsData, medalSorts int64) 
 }
 
 // convertToMedals 将 MedalsData 转换为 model.Medals 并进行排序
-func convertToMedals(medalsData *spiderModel.OlympicsData, medalSorts int64) []*model.Medal {
+func convertToMedals(medalsData *spiderModel.OlympicsData, medalSorts int) []*model.Medal {
 	// 创建存储奖牌条目的切片
 	var entries []*model.Medal
 
@@ -76,7 +75,7 @@ func convertToMedals(medalsData *spiderModel.OlympicsData, medalSorts int64) []*
 	case 2:
 		// 按国家首字母排序
 		sort.Slice(entries, func(i, j int) bool {
-			return entries[i].CountryName < entries[j].CountryName
+			return entries[i].Flag > entries[j].Flag
 		})
 	}
 
@@ -112,7 +111,6 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 		}
 
 		var res = 16
-		fmt.Println(event.Competitors[0].WinnerLoserTie)
 		if event.Competitors[0].WinnerLoserTie == "W" {
 			res = 2
 		} else {

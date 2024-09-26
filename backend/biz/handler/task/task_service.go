@@ -8,6 +8,8 @@ import (
 	consts2 "backend/consts"
 	"backend/pack"
 	"context"
+	"fmt"
+	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -30,7 +32,12 @@ func AllMedals(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, err, consts2.ERROR)
 		return
 	}
-	resp.Data = pack.WrapOlympicsData(userResp, req.MedalSorts)
+	sorts, err := strconv.Atoi(req.MedalSorts)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Data = pack.WrapOlympicsData(userResp, sorts)
 	pack.SendResponse(c, resp, consts.StatusOK)
 }
 
@@ -44,7 +51,7 @@ func DailyEvent(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, err, consts2.ErrorBind)
 		return
 	}
-
+	fmt.Println(req.Date)
 	resp := new(task.DailyEventResp)
 	resp.Base = pack.BuildBaseReap(nil)
 	userResp, err := service.NewTaskService(ctx, c).DailyEvent(ctx, &req)
