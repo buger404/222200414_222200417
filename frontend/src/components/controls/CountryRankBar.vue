@@ -16,6 +16,7 @@ const props = defineProps<{
     <div class="box">
       <div style="width: 80px; text-align: center;">
         <img
+            class="flag"
             style="width: 36px; height: 24px;"
             :src="'https://olympics.com/OG2024/assets/images/flags/OG2024/' + flag + '.webp'"
             :alt="name"
@@ -42,6 +43,10 @@ const props = defineProps<{
 </template>
 
 <style scoped>
+.flag{
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.40);
+}
+
 .rank{
   color: #F33E3E;
   text-align: center;

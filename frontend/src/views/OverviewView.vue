@@ -1,10 +1,44 @@
 <script setup lang="ts">
 import Button from "@/components/controls/Button.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import {ArrowDown, Search} from '@element-plus/icons-vue'
 import CountryRankBar from "@/components/controls/CountryRankBar.vue";
+import { MedalList, MedalListData } from "@/models/modelMedalList";
+import axios from '@/utils/axios';
 
+let medalList : MedalList;
+
+const listLoaded = ref(false);
 const searchCountry = ref('');
+const sortMethod = ref(0);
+const displayList = ref<MedalListData[]>([]);
+
+const sortMethods = ["金牌", "总奖牌数", "首字母"]
+
+function fetchMedalList() {
+  listLoaded.value = false;
+  axios.get('/api/medals/all', {
+    params: {
+      sort: sortMethod.value
+    }
+  }).then((response) => {
+    medalList = response;
+    listLoaded.value = true;
+    console.log(medalList);
+    refreshDisplayList();
+  }).catch((error) => {
+    console.error('请求失败', error);
+  })
+}
+
+function refreshDisplayList() {
+  displayList.value = medalList.data.filter(item =>
+      searchCountry.value === "" || item.name.includes(searchCountry.value)
+  );
+}
+
+fetchMedalList();
+
 </script>
 
 <template>
@@ -13,6 +47,7 @@ const searchCountry = ref('');
       <h1 style="width: calc(100% - 240px); ">各国奖牌数总榜</h1>
       <el-input
           class="input_box"
+          @input="refreshDisplayList()"
           v-model="searchCountry"
           style="width: 240px;"
           size="large"
@@ -23,13 +58,16 @@ const searchCountry = ref('');
     <div class="row">
       <el-dropdown class="drop_down" style="width: 35%">
         <el-button type="primary">
-          排序方式<el-icon class="el-icon--right"><arrow-down /></el-icon>
+          排序方式：{{sortMethods[sortMethod]}}<el-icon class="el-icon--right"><arrow-down /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu class="drop_down_menu">
-            <el-dropdown-item>金牌</el-dropdown-item>
-            <el-dropdown-item>总奖牌数</el-dropdown-item>
-            <el-dropdown-item>首字母</el-dropdown-item>
+            <el-dropdown-item
+                v-for="(item, index) in sortMethods"
+                @click="sortMethod = index; fetchMedalList();"
+            >
+              {{item}}
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -47,66 +85,33 @@ const searchCountry = ref('');
       </div>
       <div style="width: 5%;"/>
     </div>
-    <div style="height: 100%; overflow: auto; scrollbar-width: none;">
+    <div class="rank_box" v-loading="!listLoaded">
+      <h2 v-if="listLoaded && (displayList.length == 0)">没有匹配的国家。</h2>
       <CountryRankBar
-          name="美利坚合众国"
-          flag="USA"
-          gold="40"
-          silver="44"
-          bronze="42"
-          total="126"
-          rank=1
-      />
-      <CountryRankBar
-          name="美利坚合众国"
-          flag="USA"
-          gold="40"
-          silver="44"
-          bronze="42"
-          total="126"
-          rank=1
-      />
-      <CountryRankBar
-          name="美利坚合众国"
-          flag="USA"
-          gold="40"
-          silver="44"
-          bronze="42"
-          total="126"
-          rank=1
-      />
-      <CountryRankBar
-          name="美利坚合众国"
-          flag="USA"
-          gold="40"
-          silver="44"
-          bronze="42"
-          total="126"
-          rank=1
-      />
-      <CountryRankBar
-          name="美利坚合众国"
-          flag="USA"
-          gold="40"
-          silver="44"
-          bronze="42"
-          total="126"
-          rank=1
-      />
-      <CountryRankBar
-          name="美利坚合众国"
-          flag="USA"
-          gold="40"
-          silver="44"
-          bronze="42"
-          total="126"
-          rank=1
+          v-if="listLoaded && (displayList.length > 0)"
+          v-for="(item, index) in displayList"
+          :name="item.name"
+          :flag="item.flag"
+          :gold="item.medals.gold"
+          :silver="item.medals.sliver"
+          :bronze="item.medals.bronze"
+          :total="item.medals.total"
+          :rank="index + 1"
       />
     </div>
   </main>
 </template>
 
 <style scoped>
+.rank_box {
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  --el-mask-color: transparent;
+  --el-loading-spinner-size: 90px;
+  --el-color-primary: #f33e3e;
+}
+
 .drop_down {
   --el-font-size-base: 18px;
   --el-border-radius-base: 180px;
