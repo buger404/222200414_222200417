@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import Button from "@/components/controls/Button.vue";
 import {useRouter} from "vue-router";
+import MessageBox from "@/components/MessageBox.vue";
+import {ref} from "vue";
 const router = useRouter();
+
+const aboutUs = ref();
 
 function navigate(path : string) {
   router.push(path);
+}
+
+function showAboutUs() {
+  aboutUs.value.open();
 }
 </script>
 
@@ -19,8 +27,18 @@ function navigate(path : string) {
           style="margin-right: 100px;
           width: 272px"
       />
-      <Button content="关于我们" style="width: 272px"/>
+      <Button content="关于我们" style="width: 272px" @click="showAboutUs()"/>
     </div>
+    <MessageBox ref="aboutUs" title="关于我们">
+      <p>24秋-软件工程&实践-W班</p>
+      <p>结对作业第一次——原型设计</p>
+      <br>
+      <p>队伍：</p>
+      <p>222200414  陈志琰</p>
+      <p>222200417  林宇涛</p>
+      <br>
+      <p>Made with Figma</p>
+    </MessageBox>
   </main>
 </template>
 
@@ -60,6 +78,7 @@ function navigate(path : string) {
   -webkit-text-fill-color: transparent;
   margin-top: 36vh;
 }
+
 .subtitle {
   display: flex;
   width: 100%;
