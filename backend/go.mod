@@ -1,11 +1,11 @@
 module backend
 
-go 1.23.1
+go 1.22
 
 require (
 	github.com/cloudwego/hertz v0.9.3
-	github.com/golang/protobuf v1.5.0
-	google.golang.org/protobuf v1.34.2
+	github.com/golang/protobuf v1.5.4
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
