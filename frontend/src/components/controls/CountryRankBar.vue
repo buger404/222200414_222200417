@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CountryFlag from "@/components/controls/CountryFlag.vue";
 const props = defineProps<{
   flag : string
   rank : number
@@ -15,12 +16,7 @@ const props = defineProps<{
     <h2 class="rank">{{rank}}</h2>
     <div class="box">
       <div style="width: 80px; text-align: center;">
-        <img
-            class="flag"
-            style="width: 36px; height: 24px;"
-            :src="'https://olympics.com/OG2024/assets/images/flags/OG2024/' + flag + '.webp'"
-            :alt="name"
-        />
+        <CountryFlag :country="flag"/>
       </div>
       <div style="width: calc(35% - 80px);">
         <h2>{{name}}</h2>
@@ -43,10 +39,6 @@ const props = defineProps<{
 </template>
 
 <style scoped>
-.flag{
-  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.40);
-}
-
 .rank{
   color: #F33E3E;
   text-align: center;
