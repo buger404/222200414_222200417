@@ -22,4 +22,6 @@ ENV service todolist
 WORKDIR /app
 COPY --from=builder /app/output /app/output
 
+EXPOSE 8888
+
 CMD ["/app/output/main.exe"]
