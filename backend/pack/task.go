@@ -75,7 +75,7 @@ func convertToMedals(medalsData *spiderModel.OlympicsData, medalSorts int) []*mo
 	case 2:
 		// 按国家首字母排序
 		sort.Slice(entries, func(i, j int) bool {
-			return entries[i].Flag > entries[j].Flag
+			return entries[i].Flag < entries[j].Flag
 		})
 	}
 

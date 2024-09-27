@@ -1,4 +1,4 @@
-FROM golang:1.23 AS builder
+FROM docker.m.daocloud.io/library/golang:1.23 AS builder
 
 ENV GO111MODULE=on
 ENV    CGO_ENABLED=0
@@ -18,7 +18,7 @@ FROM alpine
 
 RUN apk update --no-cache && apk add --no-cache ca-certificates tzdata
 ENV TZ Asia/Shanghai
-ENV service todolist
+ENV service Olymipc
 WORKDIR /app
 COPY --from=builder /app/output /app/output
 
