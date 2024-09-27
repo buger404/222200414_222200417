@@ -32,9 +32,7 @@ function fetchMedalList() {
 }
 
 function refreshDisplayList() {
-  displayList.value = medalList.data.details.filter(item =>
-      searchCountry.value === "" || item.countryName.includes(searchCountry.value)
-  );
+  displayList.value = medalList.data.details;
 }
 
 fetchMedalList();
@@ -88,8 +86,9 @@ fetchMedalList();
     <div class="rank_box" v-loading="!listLoaded">
       <h2 v-if="listLoaded && (displayList.length == 0)">没有匹配的国家。</h2>
       <CountryRankBar
-          v-if="listLoaded && (displayList.length > 0)"
           v-for="(item, index) in displayList"
+          v-if="listLoaded && (displayList.length > 0) &&
+                (searchCountry.value === '' || item.countryName.includes(searchCountry.value))"
           :name="(sortMethod == 2 ? (item.flag + ':') : '') + item.countryName"
           :flag="item.flag"
           :gold="item.list.gold ?? 0"
