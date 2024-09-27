@@ -66,15 +66,15 @@ message table{
 }
 
 message eventList{
-  string id = 1;
+  string group_id = 1;
   repeated contest contests = 2;
 }
 
 message contest{
-  string id = 1;
+  string contest_id = 1;
   string date = 2;
   repeated country countries = 3;
-  string status = 4;
+  int64 status = 4;
 }
 
 service ModelService{

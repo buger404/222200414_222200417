@@ -33,6 +33,7 @@ message eventTypeListResp{
 }
 
 message eventTableReq{
+  string eventID = 1;
 }
 
 message eventTableResp{

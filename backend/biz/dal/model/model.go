@@ -55,3 +55,21 @@ type Event struct {
 }
 
 type EventTypeList []map[string]string
+
+type EventTable struct {
+	Title       string        `json:"title"`
+	Period      string        `json:"period"`
+	Special     string        `json:"special"`
+	Competitors []*Competitor `json:"competitors"`
+}
+
+type ContestList struct {
+	Title       string     `json:"title"`
+	Date        string     `json:"date"`
+	Competitors []*Contest `json:"competitors"`
+}
+
+type Contest struct {
+	ID      string        `json:"ID"`
+	Country []*Competitor `json:"country"`
+}

@@ -112,9 +112,9 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 
 		var res = 16
 		if event.Competitors[0].WinnerLoserTie == "W" {
-			res = 2
-		} else {
 			res = 1
+		} else {
+			res = 2
 		}
 
 		// 创建并添加转换后的 Event 到 modelEvents 切片
@@ -155,4 +155,90 @@ func WrapEventTypeList(eventTypeData spiderModel.EventTypeList) (*model.EventTyp
 	}
 
 	return eventTypeList, nil
+}
+
+func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable {
+	var tables []*model.Table
+
+	// 遍历所有 EventTable
+	for _, et := range eventTable1 {
+		// 创建新 Table
+		table := &model.Table{
+			Title:   et.Title,
+			Period:  et.Period,
+			Special: et.Special,
+		}
+
+		table.Winner = 2
+		// 转换 Competitors 为 Countries
+		var countries []*model.Country
+		for i, competitor := range et.Competitors {
+			country := &model.Country{
+				Name:   competitor.Name,
+				Rating: competitor.Rating,
+				Flag:   consts2.CountryMap[competitor.Name], // 从 CountryMap 获取国家标志
+			}
+			countries = append(countries, country)
+
+			// 假设第一个 Competitor 是 Winner
+			if i == 0 && competitor.WinnerLoserTie == "W" {
+				table.Winner = int64(i + 1) // 设置 Winner 为第一个 Competitor 的索引（+1 因为 Winner 索引从1开始）
+			}
+		}
+
+		// 将 countries 添加到 Table
+		table.Countries = countries
+
+		// 将 Table 添加到 Tables 列表中
+		tables = append(tables, table)
+	}
+
+	// 创建最终的 EventTable2
+	eventTable2 := &model.EventTable{
+		Tables: tables,
+	}
+
+	return eventTable2
+}
+
+func ConvertContestListToEventList(contestList []*spiderModel.ContestList) *model.EventList {
+	// 创建最终的 EventList 实例
+	var eventList = &model.EventList{}
+
+	for _, contest := range contestList {
+		// 创建新的 Contest 列表
+		var contests []*model.Contest
+
+		for _, c := range contest.Competitors {
+			// 转换 Competitors 为 Countries
+			var countries []*model.Country
+			code := 2 // 默认 code 为 2
+			for i, competitor := range c.Country {
+				if i == 0 && competitor.WinnerLoserTie == "w" {
+					code = 1 // 如果第一个 Competitor 是赢家，设置 code 为 1
+				}
+				country := &model.Country{
+					Name:   competitor.Name,
+					Rating: competitor.Rating,
+					Flag:   consts2.CountryMap[competitor.Name], // 从 CountryMap 获取国旗
+				}
+				countries = append(countries, country)
+			}
+
+			// 创建新的 Contest 并添加到 contests 列表中
+			newContest := &model.Contest{
+				ContestId: c.ID,         // Contest ID
+				Date:      contest.Date, // Contest 日期
+				Countries: countries,    // 转换后的国家列表
+				Status:    int64(code),  // 使用 code 作为状态
+			}
+			contests = append(contests, newContest)
+		}
+
+		// 填充 EventList
+		eventList.GroupId = contest.Title // 使用 ContestList 的标题作为 EventList 的 ID
+		eventList.Contests = contests     // 将 contests 列表添加到 EventList
+	}
+
+	return eventList
 }

@@ -8,6 +8,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.10.0
 	github.com/cloudwego/hertz v0.9.3
 	github.com/golang/protobuf v1.5.4
+	github.com/pkg/errors v0.9.1
 	google.golang.org/protobuf v1.33.0
 )
 

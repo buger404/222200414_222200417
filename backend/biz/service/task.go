@@ -30,3 +30,13 @@ func (task *TaskService) EventTypeList(ctx context.Context, req *task.EventTypeL
 	data, err := dal.EventTypeList()
 	return data, err
 }
+
+func (task *TaskService) EventTable(ctx context.Context, req *task.EventTableReq) ([]*model.EventTable, error) {
+	data, err := dal.EventTable(req.EventID)
+	return data, err
+}
+
+func (task *TaskService) ContestList(ctx context.Context, req *task.EventListReq) ([]*model.ContestList, error) {
+	data, err := dal.ContestList()
+	return data, err
+}

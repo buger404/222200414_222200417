@@ -2,13 +2,15 @@
 
 package main
 
-import "github.com/cloudwego/hertz/pkg/app/server"
+import (
+	"github.com/cloudwego/hertz/pkg/app/server"
+)
 
 func main() {
 	h := server.Default()
 
 	register(h)
 	h.Spin()
-	//data, _ := dal.EventTypeList()
+	//data, _ := dal.ContestList()
 	//fmt.Printf("data:%+v", data)
 }

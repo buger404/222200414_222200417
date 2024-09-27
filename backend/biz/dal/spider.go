@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/pkg/errors"
 )
 
 // GetAllMedals 获取所有奖牌信息
@@ -209,7 +210,7 @@ func parseDailyEvents(data string) ([]*model.Event, error) {
 func EventTypeList() ([]map[string]string, error) {
 	data, err := fetchPageContent(consts.Url)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to fetch page")
 	}
 	return extractEvents(data)
 }
@@ -277,58 +278,222 @@ func extractEvents(data string) ([]map[string]string, error) {
 	return events, nil
 }
 
-func EventTable() {
-
-}
-
-func extractEventsId(data string) ([]string, error) {
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(data))
+func EventTable(eventID string) ([]*model.EventTable, error) {
+	url := "https://olympics.com/OG2024/data/GLO_EventGames~comp=OG2024~event=" + eventID + "~lang=CHI.json"
+	data, err := fetchPageContent(url)
 	if err != nil {
 		return nil, err
 	}
+	return parseEvents(data, url)
+}
 
-	// 查找包含数据的 <script> 标签
-	scriptTag := doc.Find("script#__NEXT_DATA__").First()
-	if scriptTag.Length() == 0 {
-		return nil, fmt.Errorf("no script tag with JSON data found")
+func parseEvents(data string, url string) ([]*model.EventTable, error) {
+	var jsonMap map[string]interface{}
+	err := json.Unmarshal([]byte(data), &jsonMap)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse json data: %v, url:%v", err, url)
 	}
 
-	jsonData := scriptTag.Text()
+	// 获取事件数据
+	events, ok := jsonMap["event"].(map[string]interface{})["phases"].([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("failed to assert data")
+	}
 
-	// 将 jsonData 解析为 map 类型
+	var parsedEvents []*model.EventTable
+
+	for _, phase := range events {
+		phaseMap, ok := phase.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("failed to assert phase data")
+		}
+
+		// 访问 'units' 字段
+		units, ok := phaseMap["units"].([]interface{})
+		if !ok {
+			continue // 如果没有 'units' 字段，则跳过
+		}
+		shortDescription := "null"
+		// 遍历每个单位
+		for _, unit := range units {
+			unitMap, ok := unit.(map[string]interface{})
+			if !ok {
+				return nil, fmt.Errorf("failed to assert unit data")
+			}
+
+			// 从单位中提取所需字段
+			unitDescription := unitMap["description"].(string)
+			shortDescription, ok = unitMap["shortDescription"].(string)
+
+			// 访问 'schedule' 中的 'items'
+			schedule, ok := unitMap["schedule"].(map[string]interface{})
+			if !ok {
+				continue // 如果没有 'schedule' 字段，则跳过
+			}
+
+			result, ok := schedule["result"].(map[string]interface{})
+			if !ok {
+				continue // 如果没有 'result' 字段，则跳过
+			}
+
+			extends, ok := result["extendedInfos"].([]interface{})
+			if !ok {
+				continue
+			}
+			special := ""
+			for _, extend := range extends {
+				ex, ok := extend.(map[string]interface{})
+				if !ok {
+					continue
+				}
+				code := ex["ei_code"].(string)
+				if code == "RES_CODE" {
+					special = ex["ei_value"].(string)
+					break
+				}
+			}
+
+			items, ok := result["items"].([]interface{})
+			if !ok {
+				continue // 如果没有 'items' 字段，则跳过
+			}
+			var competitors []*model.Competitor
+			for _, item := range items {
+				i, ok := item.(map[string]interface{})
+				if !ok {
+					continue
+				}
+				rating := i["resultData"].(string)
+				winnerLoserTie := i["resultWLT"].(string)
+				participant := i["participant"].(map[string]interface{})
+				organisation, ok := participant["organisation"].(map[string]interface{})
+				if !ok {
+					continue
+				}
+				country := organisation["description"].(string)
+				competitors = append(competitors, &model.Competitor{
+					Name:           country,
+					Rating:         rating,
+					WinnerLoserTie: winnerLoserTie,
+				})
+			}
+			// 创建事件结构体并添加到列表
+			parsedEvents = append(parsedEvents, &model.EventTable{
+				Title:       shortDescription,
+				Period:      unitDescription,
+				Competitors: competitors,
+				Special:     special,
+			})
+		}
+	}
+
+	return parsedEvents, nil
+}
+
+func ContestList() ([]*model.ContestList, error) {
+	url := consts.FootballUrl
+	data, err := fetchPageContent(url)
+	if err != nil {
+		return nil, err
+	}
+	return parseContest(data)
+}
+
+func parseContest(data string) ([]*model.ContestList, error) {
 	var jsonMap map[string]interface{}
-	err = json.Unmarshal([]byte(jsonData), &jsonMap)
+	err := json.Unmarshal([]byte(data), &jsonMap)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse json data: %v", err)
 	}
 
-	medalsTable, ok := jsonMap["props"].(map[string]interface{})["pageProps"].(map[string]interface{})["initialMedals"].(map[string]interface{})["medalStandings"].(map[string]interface{})["medalsTable"].([]interface{})
+	// 获取事件数据
+	events, ok := jsonMap["event"].(map[string]interface{})["phases"].([]interface{})
 	if !ok {
-		return nil, fmt.Errorf("failed to extract medals table from JSON data")
+		return nil, fmt.Errorf("failed to assert data")
 	}
 
-	// 用于存储最终的事件列表
-	var events []string
+	var contestList []*model.ContestList
 
-	for _, entry := range medalsTable {
-		entryMap := entry.(map[string]interface{})
+	// 遍历所有 phases
+	for _, phase := range events {
+		phaseMap, ok := phase.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("failed to assert phase data")
+		}
 
-		// 获取 disciplines 数据
-		disciplines := entryMap["disciplines"].([]interface{})
-		for _, discipline := range disciplines {
-			disciplineMap := discipline.(map[string]interface{})
-			medalWinners, ok := disciplineMap["medalWinners"].([]interface{})
+		// 访问 'units' 字段
+		units, ok := phaseMap["units"].([]interface{})
+		if !ok {
+			continue // 如果没有 'units' 字段，则跳过
+		}
+
+		// 遍历每个单位
+		for _, unit := range units {
+			unitMap, ok := unit.(map[string]interface{})
 			if !ok {
-				continue
+				return nil, fmt.Errorf("failed to assert unit data")
 			}
-			for _, winner := range medalWinners {
-				winnerMap := winner.(map[string]interface{})
-				eventCode := winnerMap["eventCode"].(string)
-				// 添加到事件列表
-				events = append(events, eventCode)
+
+			// 从单位中提取所需字段
+			shortDescription, ok := unitMap["shortDescription"].(string)
+			if !ok {
+				shortDescription = "null"
 			}
+
+			// 访问 'schedule' 中的 'items'
+			schedule, ok := unitMap["schedule"].(map[string]interface{})
+			if !ok {
+				continue // 如果没有 'schedule' 字段，则跳过
+			}
+
+			startDate, ok := schedule["startDate"].(string)
+			unitNum, ok := schedule["unitNum"].(string)
+
+			result, ok := schedule["result"].(map[string]interface{})
+			if !ok {
+				continue // 如果没有 'result' 字段，则跳过
+			}
+
+			items, ok := result["items"].([]interface{})
+			if !ok {
+				continue // 如果没有 'items' 字段，则跳过
+			}
+
+			// 创建 competitors 列表
+			var competitors []*model.Competitor
+			for _, item := range items {
+				i, ok := item.(map[string]interface{})
+				if !ok {
+					continue
+				}
+				rating := i["resultData"].(string)
+				winnerLoserTie := i["resultWLT"].(string)
+				participant := i["participant"].(map[string]interface{})
+				organisation, ok := participant["organisation"].(map[string]interface{})
+				if !ok {
+					continue
+				}
+				country := organisation["description"].(string)
+				competitors = append(competitors, &model.Competitor{
+					Name:           country,
+					Rating:         rating,
+					WinnerLoserTie: winnerLoserTie,
+				})
+			}
+
+			// 创建 Contest 并添加到 ContestList
+			contest := &model.Contest{
+				ID:      unitNum,
+				Country: competitors,
+			}
+
+			contestList = append(contestList, &model.ContestList{
+				Title:       shortDescription,
+				Date:        startDate,
+				Competitors: []*model.Contest{contest},
+			})
 		}
 	}
 
-	return events, nil
+	return contestList, nil
 }

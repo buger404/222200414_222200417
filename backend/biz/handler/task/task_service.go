@@ -83,6 +83,7 @@ func EventTypeList(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, err, consts2.ERROR)
 		return
 	}
+	resp.Base = pack.BuildBaseReap(nil)
 	pack.SendResponse(c, resp, consts.StatusOK)
 }
 
@@ -98,8 +99,18 @@ func EventTable(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(task.EventTableResp)
-
-	c.JSON(consts.StatusOK, resp)
+	userResp, err := service.NewTaskService(ctx, c).EventTable(ctx, &req)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Data = pack.ConvertEventTable(userResp)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Base = pack.BuildBaseReap(nil)
+	pack.SendResponse(c, resp, consts.StatusOK)
 }
 
 // EventList .
@@ -114,6 +125,16 @@ func EventList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(task.EventListResp)
-
-	c.JSON(consts.StatusOK, resp)
+	userResp, err := service.NewTaskService(ctx, c).ContestList(ctx, &req)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Data = pack.ConvertContestListToEventList(userResp)
+	if err != nil {
+		pack.SendFailResponse(c, err, consts2.ERROR)
+		return
+	}
+	resp.Base = pack.BuildBaseReap(nil)
+	pack.SendResponse(c, resp, consts.StatusOK)
 }

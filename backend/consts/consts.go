@@ -1,9 +1,10 @@
 package consts
 
 const (
-	Url       = "https://olympics.com/zh/paris-2024/medals"
-	ErrorBind = 10001
-	ERROR     = 10000
+	Url         = "https://olympics.com/zh/paris-2024/medals"
+	FootballUrl = "https://olympics.com/OG2024/data/GLO_EventGames~comp=OG2024~event=FBLMTEAM11------------~lang=CHI.json"
+	ErrorBind   = 10001
+	ERROR       = 10000
 )
 
 var (
