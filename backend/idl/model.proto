@@ -65,6 +65,10 @@ message table{
   string special = 5;
 }
 
+message eventLists{
+  repeated eventList event = 1;
+}
+
 message eventList{
   string group_id = 1;
   repeated contest contests = 2;

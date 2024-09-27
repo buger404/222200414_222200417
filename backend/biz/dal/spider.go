@@ -427,7 +427,8 @@ func parseContest(data string) ([]*model.ContestList, error) {
 			continue // 如果没有 'units' 字段，则跳过
 		}
 
-		// 遍历每个单位
+		// 创建一个 ContestList（如果该 phase 有 units）
+		var contest *model.ContestList
 		for _, unit := range units {
 			unitMap, ok := unit.(map[string]interface{})
 			if !ok {
@@ -481,17 +482,28 @@ func parseContest(data string) ([]*model.ContestList, error) {
 				})
 			}
 
-			// 创建 Contest 并添加到 ContestList
-			contest := &model.Contest{
+			// 创建 Contest
+			contestItem := &model.Contest{
 				ID:      unitNum,
 				Country: competitors,
 			}
 
-			contestList = append(contestList, &model.ContestList{
-				Title:       shortDescription,
-				Date:        startDate,
-				Competitors: []*model.Contest{contest},
-			})
+			// 如果 contest 为空，则初始化 ContestList
+			if contest == nil {
+				contest = &model.ContestList{
+					Title:       shortDescription,
+					Date:        startDate,
+					Competitors: []*model.Contest{contestItem},
+				}
+			} else {
+				// 否则将 Contest 添加到现有的 Competitors 列表中
+				contest.Competitors = append(contest.Competitors, contestItem)
+			}
+		}
+
+		// 将生成的 ContestList 添加到 contestList 中
+		if contest != nil {
+			contestList = append(contestList, contest)
 		}
 	}
 

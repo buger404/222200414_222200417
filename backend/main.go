@@ -2,9 +2,7 @@
 
 package main
 
-import (
-	"github.com/cloudwego/hertz/pkg/app/server"
-)
+import "github.com/cloudwego/hertz/pkg/app/server"
 
 func main() {
 	h := server.Default()
@@ -12,5 +10,7 @@ func main() {
 	register(h)
 	h.Spin()
 	//data, _ := dal.ContestList()
-	//fmt.Printf("data:%+v", data)
+	//for i, contest := range data {
+	//	fmt.Printf("Contest %d: %+v\n", i, *contest)
+	//}
 }

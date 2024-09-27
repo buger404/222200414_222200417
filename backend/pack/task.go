@@ -201,9 +201,9 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 	return eventTable2
 }
 
-func ConvertContestListToEventList(contestList []*spiderModel.ContestList) *model.EventList {
-	// 创建最终的 EventList 实例
-	var eventList = &model.EventList{}
+func ConvertContestListToEventList(contestList []*spiderModel.ContestList) *model.EventLists {
+	// 创建一个 EventList 切片来存储多个 EventList
+	var eventLists []*model.EventList
 
 	for _, contest := range contestList {
 		// 创建新的 Contest 列表
@@ -235,10 +235,17 @@ func ConvertContestListToEventList(contestList []*spiderModel.ContestList) *mode
 			contests = append(contests, newContest)
 		}
 
-		// 填充 EventList
-		eventList.GroupId = contest.Title // 使用 ContestList 的标题作为 EventList 的 ID
-		eventList.Contests = contests     // 将 contests 列表添加到 EventList
+		// 创建新的 EventList 实例并添加到 eventLists 列表中
+		eventList := &model.EventList{
+			GroupId:  contest.Title, // 使用 ContestList 的标题作为 EventList 的 ID
+			Contests: contests,      // 将 contests 列表添加到 EventList
+		}
+
+		eventLists = append(eventLists, eventList)
 	}
 
-	return eventList
+	// 返回包含多个 EventList 的切片
+	return &model.EventLists{
+		Event: eventLists,
+	}
 }

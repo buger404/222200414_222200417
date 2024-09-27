@@ -46,7 +46,7 @@ message eventListReq{
 
 message eventListResp{
   model.baseResp base = 1;
-  model.eventList data = 2;
+  model.eventLists data = 2;
 }
 
 service TaskService{
