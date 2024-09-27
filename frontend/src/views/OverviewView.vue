@@ -19,7 +19,7 @@ function fetchMedalList() {
   listLoaded.value = false;
   axios.get('/api/medals/all', {
     params: {
-      sort: sortMethod.value
+      medalSorts: sortMethod.value.toString()
     }
   }).then((response) => {
     medalList = response;
@@ -32,8 +32,8 @@ function fetchMedalList() {
 }
 
 function refreshDisplayList() {
-  displayList.value = medalList.data.filter(item =>
-      searchCountry.value === "" || item.name.includes(searchCountry.value)
+  displayList.value = medalList.data.details.filter(item =>
+      searchCountry.value === "" || item.countryName.includes(searchCountry.value)
   );
 }
 
@@ -90,12 +90,12 @@ fetchMedalList();
       <CountryRankBar
           v-if="listLoaded && (displayList.length > 0)"
           v-for="(item, index) in displayList"
-          :name="item.name"
+          :name="(sortMethod == 2 ? (item.flag + ':') : '') + item.countryName"
           :flag="item.flag"
-          :gold="item.medals.gold"
-          :silver="item.medals.sliver"
-          :bronze="item.medals.bronze"
-          :total="item.medals.total"
+          :gold="item.list.gold ?? 0"
+          :silver="item.list.sliver ?? 0"
+          :bronze="item.list.bronze ?? 0"
+          :total="item.list.total ?? 0"
           :rank="index + 1"
       />
     </div>

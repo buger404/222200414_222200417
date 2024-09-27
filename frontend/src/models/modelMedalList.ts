@@ -1,6 +1,6 @@
 export interface MedalList {
     base: Base;
-    data: MedalListData[];
+    data: Detail;
     [property: string]: any;
 }
 
@@ -13,6 +13,10 @@ export interface Base {
     [property: string]: any;
 }
 
+export interface Detail {
+    details : MedalListData[];
+}
+
 export interface MedalListData {
     /**
      * 国旗ID
@@ -21,11 +25,11 @@ export interface MedalListData {
     /**
      * 奖牌数，金牌、银牌、铜牌、总数
      */
-    medals: Medals;
+    list: Medals;
     /**
      * 国家名
      */
-    name: string;
+    countryName: string;
     [property: string]: any;
 }
 
