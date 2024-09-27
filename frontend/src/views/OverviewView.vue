@@ -84,11 +84,10 @@ fetchMedalList();
       <div style="width: 5%;"/>
     </div>
     <div class="rank_box" v-loading="!listLoaded">
-      <h2 v-if="listLoaded && (displayList.length == 0)">没有匹配的国家。</h2>
+      <h2 v-if="listLoaded && displayList.every(item => !(searchCountry === '' || item.countryName.includes(searchCountry)))">没有匹配的国家。</h2>
       <CountryRankBar
           v-for="(item, index) in displayList"
-          v-if="listLoaded && (displayList.length > 0) &&
-                (searchCountry.value === '' || item.countryName.includes(searchCountry.value))"
+          v-if="listLoaded && (displayList.length > 0)"
           :name="(sortMethod == 2 ? (item.flag + ':') : '') + item.countryName"
           :flag="item.flag"
           :gold="item.list.gold ?? 0"
@@ -96,6 +95,7 @@ fetchMedalList();
           :bronze="item.list.bronze ?? 0"
           :total="item.list.total ?? 0"
           :rank="index + 1"
+          :style="(searchCountry === '' || item.countryName.includes(searchCountry)) ? 'display: block;' : 'display: none;'"
       />
     </div>
   </main>
