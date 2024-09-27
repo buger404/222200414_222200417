@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import NavigatorItem from "@/components/controls/NavigatorItem.vue";
 import HomeIcon from "@/components/icons/IconHome.vue";
 import OverviewIcon from "@/components/icons/IconOverview.vue";
+import IconDay from "@/components/icons/IconDay.vue";
 </script>
 
 <template>
@@ -13,6 +14,9 @@ import OverviewIcon from "@/components/icons/IconOverview.vue";
     </NavigatorItem>
     <NavigatorItem content="概览" to="/overview">
       <OverviewIcon/>
+    </NavigatorItem>
+    <NavigatorItem content="每日赛程" to="/day">
+      <IconDay/>
     </NavigatorItem>
   </header>
 
@@ -28,7 +32,7 @@ header {
   display: flex;
   flex-direction: row;
   position: fixed;
-  z-index: 99999;
+  z-index: 10;
   top: 0;
   background: rgba(255, 255, 255, 0.80);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.10);

@@ -64,7 +64,7 @@ h1{
   width: clamp(60vw, 935px, 935px);
   height: clamp(40vw, 551px, 551px);
   border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.50) 0%, #FFF 100%),
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.80) 0%, #FFF 100%),
               url('../assets/universal.jpg') lightgray 50% / cover no-repeat;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.15);
   display: flex;

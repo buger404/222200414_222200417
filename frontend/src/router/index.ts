@@ -17,6 +17,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/OverviewView.vue')
     }
+    ,
+    {
+      path: '/day',
+      name: 'day',
+      component: () => import('../views/DayView.vue')
+    }
   ]
 })
 

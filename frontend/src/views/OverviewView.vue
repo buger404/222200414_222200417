@@ -5,6 +5,7 @@ import {ArrowDown, Search} from '@element-plus/icons-vue'
 import CountryRankBar from "@/components/controls/CountryRankBar.vue";
 import { MedalList, MedalListData } from "@/models/modelMedalList";
 import axios from '@/utils/axios';
+import {ElMessage} from "element-plus";
 
 let medalList : MedalList;
 
@@ -26,6 +27,11 @@ function fetchMedalList() {
     listLoaded.value = true;
     console.log(medalList);
     refreshDisplayList();
+    ElMessage({
+      message: '已成功获取奖牌信息',
+      type: 'success',
+      plain: true,
+    });
   }).catch((error) => {
     console.error('请求失败', error);
   })
