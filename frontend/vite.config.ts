@@ -12,6 +12,15 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
   ],
+  server: {
+    proxy: {
+      "/api": {
+        //target: "http://localhost:4523/m1/5195327-4861190-default/",
+        target: "http://localhost:6563/",
+        changeOrigin: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
