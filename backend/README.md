@@ -5,7 +5,7 @@
 切换到项目根目录，然后构建你的镜像
 
 ```
-docker build -t your-image-name 
+docker build -t your-image-name .
 ```
 
 然后运行,这个前面的8888端口可以随便换
