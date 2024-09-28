@@ -94,6 +94,11 @@ func parseTime(startDate string) string {
 }
 
 func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
+	ReverseCountryMap := make(map[string]string)
+	for k, v := range consts2.CountryMap {
+		ReverseCountryMap[v] = k
+	}
+
 	var modelEvents []*model.Event
 
 	for _, event := range events {
@@ -104,7 +109,7 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 		// 转换 Competitor 为 Country
 		for _, competitor := range event.Competitors {
 			countries = append(countries, &model.Country{
-				Name:   competitor.Name,
+				Name:   ReverseCountryMap[competitor.Name],
 				Rating: competitor.Rating,
 				Flag:   consts2.CountryMap[competitor.Name], // 如果有旗帜信息，可以在此处填入
 			})

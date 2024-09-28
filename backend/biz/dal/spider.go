@@ -175,7 +175,7 @@ func parseDailyEvents(data string) ([]*model.Event, error) {
 					return nil, fmt.Errorf("failed to assert competitor data")
 				}
 
-				name := competitorMap["name"].(string)
+				name := competitorMap["noc"].(string)
 				results, ok := competitorMap["results"].(map[string]interface{})
 				if !ok {
 					continue

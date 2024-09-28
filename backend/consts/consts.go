@@ -9,6 +9,7 @@ const (
 
 var (
 	CountryMap = map[string]string{
+		"独立参赛运动员":        "AIN",
 		"阿尔巴尼亚":          "ALB",
 		"阿尔及利亚":          "ALG",
 		"阿富汗":            "AFG",
