@@ -4,6 +4,7 @@ import NavigatorItem from "@/components/controls/NavigatorItem.vue";
 import HomeIcon from "@/components/icons/IconHome.vue";
 import OverviewIcon from "@/components/icons/IconOverview.vue";
 import IconDay from "@/components/icons/IconDay.vue";
+import IconVS from "@/components/icons/IconVS.vue";
 </script>
 
 <template>
@@ -17,6 +18,9 @@ import IconDay from "@/components/icons/IconDay.vue";
     </NavigatorItem>
     <NavigatorItem content="每日赛程" to="/day">
       <IconDay/>
+    </NavigatorItem>
+    <NavigatorItem content="对阵表" to="/table">
+      <IconVS/>
     </NavigatorItem>
   </header>
 
