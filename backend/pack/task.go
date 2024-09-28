@@ -142,15 +142,24 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 	}
 }
 
-func WrapEventList(eventTypeData []*spiderModel.EventList) (*model.EventTypeLists, error) {
+func WrapEventList(eventTypeData []*spiderModel.EventList) *model.EventTypeLists {
 	// 创建最终返回的 EventTypeLists 对象
 	eventTypeLists := &model.EventTypeLists{}
+	// 使用 map 来跟踪已经处理的事件名称
+	mergedEventTypeLists := make(map[string]*model.EventTypeList)
 
 	// 遍历 eventTypeData 并填充 EventTypeLists
 	for _, eventTypeMap := range eventTypeData {
-		// 创建一个新的 EventTypeList 对象
-		eventTypeList := &model.EventTypeList{
-			Name: eventTypeMap.Name, // 从 eventTypeMap 中获取事件名称
+		// 检查事件名称是否已经存在于 mergedEventTypeLists 中
+		eventTypeList, exists := mergedEventTypeLists[eventTypeMap.Name]
+		if !exists {
+			// 如果不存在，则创建新的 EventTypeList 对象
+			eventTypeList = &model.EventTypeList{
+				Name:  eventTypeMap.Name,    // 从 eventTypeMap 中获取事件名称
+				Types: []*model.EventType{}, // 初始化 Types 列表
+			}
+			// 将新创建的 EventTypeList 添加到 mergedEventTypeLists 中
+			mergedEventTypeLists[eventTypeMap.Name] = eventTypeList
 		}
 
 		// 遍历每个 EventTypeList 中的 Types 数据并填充
@@ -170,12 +179,29 @@ func WrapEventList(eventTypeData []*spiderModel.EventList) (*model.EventTypeList
 			// 将 EventType 添加到 EventTypeList 的 Types 字段
 			eventTypeList.Types = append(eventTypeList.Types, eventType)
 		}
+	}
 
-		// 将填充好的 EventTypeList 添加到最终的 EventTypeLists
+	// 使用 map 去除 eventTypeLists.List 中重复的 ID
+	idSet := make(map[string]struct{})
+
+	// 将合并好的 EventTypeList 添加到最终的 EventTypeLists
+	for _, eventTypeList := range mergedEventTypeLists {
+		uniqueTypes := make([]*model.EventType, 0)
+
+		// 过滤掉重复的 ID
+		for _, eventType := range eventTypeList.Types {
+			if _, exists := idSet[eventType.Id]; !exists {
+				uniqueTypes = append(uniqueTypes, eventType)
+				idSet[eventType.Id] = struct{}{}
+			}
+		}
+
+		// 将唯一的类型添加到最终的 EventTypeLists
+		eventTypeList.Types = uniqueTypes
 		eventTypeLists.List = append(eventTypeLists.List, eventTypeList)
 	}
 
-	return eventTypeLists, nil
+	return eventTypeLists
 }
 
 func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable {
