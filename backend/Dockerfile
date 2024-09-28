@@ -1,4 +1,4 @@
-FROM docker.m.daocloud.io/library/golang:1.23 AS builder
+FROM golang:1.23 AS builder
 
 ENV GO111MODULE=on
 ENV    CGO_ENABLED=0
