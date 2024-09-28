@@ -26,7 +26,7 @@ func (task *TaskService) DailyEvent(ctx context.Context, req *task.DailyEventReq
 	return dal.DailyEvents(req.Date)
 }
 
-func (task *TaskService) EventTypeList(ctx context.Context, req *task.EventTypeListReq) (model.EventTypeList, error) {
+func (task *TaskService) EventTypeList(ctx context.Context, req *task.EventTypeListReq) ([]*model.EventList, error) {
 	data, err := dal.EventTypeList()
 	return data, err
 }

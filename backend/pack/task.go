@@ -142,28 +142,40 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 	}
 }
 
-func WrapEventList(eventTypeData spiderModel.EventTypeList) (*model.EventTypeList, error) {
-	eventTypeList := &model.EventTypeList{}
+func WrapEventList(eventTypeData []*spiderModel.EventList) (*model.EventTypeLists, error) {
+	// 创建最终返回的 EventTypeLists 对象
+	eventTypeLists := &model.EventTypeLists{}
 
-	// 遍历 eventTypeData 并填充 EventTypeList
+	// 遍历 eventTypeData 并填充 EventTypeLists
 	for _, eventTypeMap := range eventTypeData {
-		id, ok1 := eventTypeMap["id"]
-		name, ok2 := eventTypeMap["name"]
-		if !ok1 || !ok2 {
-			continue // 如果数据缺失，则跳过
+		// 创建一个新的 EventTypeList 对象
+		eventTypeList := &model.EventTypeList{
+			Name: eventTypeMap.Name, // 从 eventTypeMap 中获取事件名称
 		}
 
-		// 创建一个 EventType 对象并填充数据
-		eventType := &model.EventType{
-			Id:   id,
-			Name: name,
+		// 遍历每个 EventTypeList 中的 Types 数据并填充
+		for _, event := range eventTypeMap.List {
+			id, ok1 := event["id"]
+			name, ok2 := event["name"]
+			if !ok1 || !ok2 {
+				continue // 如果数据缺失，则跳过
+			}
+
+			// 创建一个 EventType 对象并填充数据
+			eventType := &model.EventType{
+				Id:   id,
+				Name: name,
+			}
+
+			// 将 EventType 添加到 EventTypeList 的 Types 字段
+			eventTypeList.Types = append(eventTypeList.Types, eventType)
 		}
 
-		// 将 EventType 添加到 EventTypeList
-		eventTypeList.Types = append(eventTypeList.Types, eventType)
+		// 将填充好的 EventTypeList 添加到最终的 EventTypeLists
+		eventTypeLists.List = append(eventTypeLists.List, eventTypeList)
 	}
 
-	return eventTypeList, nil
+	return eventTypeLists, nil
 }
 
 func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable {

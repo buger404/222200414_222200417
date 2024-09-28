@@ -454,18 +454,66 @@ func (x *Country) GetRating() string {
 	return ""
 }
 
+type EventTypeLists struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	List []*EventTypeList `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty" form:"list" query:"list"`
+}
+
+func (x *EventTypeLists) Reset() {
+	*x = EventTypeLists{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EventTypeLists) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventTypeLists) ProtoMessage() {}
+
+func (x *EventTypeLists) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventTypeLists.ProtoReflect.Descriptor instead.
+func (*EventTypeLists) Descriptor() ([]byte, []int) {
+	return file_model_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *EventTypeLists) GetList() []*EventTypeList {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
 type EventTypeList struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Types []*EventType `protobuf:"bytes,1,rep,name=types,proto3" json:"types,omitempty" form:"types" query:"types"`
+	Name  string       `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty" form:"name" query:"name"`
+	Types []*EventType `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty" form:"types" query:"types"`
 }
 
 func (x *EventTypeList) Reset() {
 	*x = EventTypeList{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_proto_msgTypes[7]
+		mi := &file_model_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -478,7 +526,7 @@ func (x *EventTypeList) String() string {
 func (*EventTypeList) ProtoMessage() {}
 
 func (x *EventTypeList) ProtoReflect() protoreflect.Message {
-	mi := &file_model_proto_msgTypes[7]
+	mi := &file_model_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -491,7 +539,14 @@ func (x *EventTypeList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventTypeList.ProtoReflect.Descriptor instead.
 func (*EventTypeList) Descriptor() ([]byte, []int) {
-	return file_model_proto_rawDescGZIP(), []int{7}
+	return file_model_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *EventTypeList) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
 }
 
 func (x *EventTypeList) GetTypes() []*EventType {
@@ -513,7 +568,7 @@ type EventType struct {
 func (x *EventType) Reset() {
 	*x = EventType{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_proto_msgTypes[8]
+		mi := &file_model_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -526,7 +581,7 @@ func (x *EventType) String() string {
 func (*EventType) ProtoMessage() {}
 
 func (x *EventType) ProtoReflect() protoreflect.Message {
-	mi := &file_model_proto_msgTypes[8]
+	mi := &file_model_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -539,7 +594,7 @@ func (x *EventType) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventType.ProtoReflect.Descriptor instead.
 func (*EventType) Descriptor() ([]byte, []int) {
-	return file_model_proto_rawDescGZIP(), []int{8}
+	return file_model_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *EventType) GetId() string {
@@ -567,7 +622,7 @@ type EventTable struct {
 func (x *EventTable) Reset() {
 	*x = EventTable{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_proto_msgTypes[9]
+		mi := &file_model_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -580,7 +635,7 @@ func (x *EventTable) String() string {
 func (*EventTable) ProtoMessage() {}
 
 func (x *EventTable) ProtoReflect() protoreflect.Message {
-	mi := &file_model_proto_msgTypes[9]
+	mi := &file_model_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -593,7 +648,7 @@ func (x *EventTable) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventTable.ProtoReflect.Descriptor instead.
 func (*EventTable) Descriptor() ([]byte, []int) {
-	return file_model_proto_rawDescGZIP(), []int{9}
+	return file_model_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *EventTable) GetTables() []*Table {
@@ -618,7 +673,7 @@ type Table struct {
 func (x *Table) Reset() {
 	*x = Table{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_proto_msgTypes[10]
+		mi := &file_model_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -631,7 +686,7 @@ func (x *Table) String() string {
 func (*Table) ProtoMessage() {}
 
 func (x *Table) ProtoReflect() protoreflect.Message {
-	mi := &file_model_proto_msgTypes[10]
+	mi := &file_model_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -644,7 +699,7 @@ func (x *Table) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Table.ProtoReflect.Descriptor instead.
 func (*Table) Descriptor() ([]byte, []int) {
-	return file_model_proto_rawDescGZIP(), []int{10}
+	return file_model_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *Table) GetTitle() string {
@@ -693,7 +748,7 @@ type EventLists struct {
 func (x *EventLists) Reset() {
 	*x = EventLists{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_proto_msgTypes[11]
+		mi := &file_model_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -706,7 +761,7 @@ func (x *EventLists) String() string {
 func (*EventLists) ProtoMessage() {}
 
 func (x *EventLists) ProtoReflect() protoreflect.Message {
-	mi := &file_model_proto_msgTypes[11]
+	mi := &file_model_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -719,7 +774,7 @@ func (x *EventLists) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventLists.ProtoReflect.Descriptor instead.
 func (*EventLists) Descriptor() ([]byte, []int) {
-	return file_model_proto_rawDescGZIP(), []int{11}
+	return file_model_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *EventLists) GetEvent() []*EventList {
@@ -741,7 +796,7 @@ type EventList struct {
 func (x *EventList) Reset() {
 	*x = EventList{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_proto_msgTypes[12]
+		mi := &file_model_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -754,7 +809,7 @@ func (x *EventList) String() string {
 func (*EventList) ProtoMessage() {}
 
 func (x *EventList) ProtoReflect() protoreflect.Message {
-	mi := &file_model_proto_msgTypes[12]
+	mi := &file_model_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -767,7 +822,7 @@ func (x *EventList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventList.ProtoReflect.Descriptor instead.
 func (*EventList) Descriptor() ([]byte, []int) {
-	return file_model_proto_rawDescGZIP(), []int{12}
+	return file_model_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *EventList) GetGroupId() string {
@@ -798,7 +853,7 @@ type Contest struct {
 func (x *Contest) Reset() {
 	*x = Contest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_proto_msgTypes[13]
+		mi := &file_model_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -811,7 +866,7 @@ func (x *Contest) String() string {
 func (*Contest) ProtoMessage() {}
 
 func (x *Contest) ProtoReflect() protoreflect.Message {
-	mi := &file_model_proto_msgTypes[13]
+	mi := &file_model_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -824,7 +879,7 @@ func (x *Contest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Contest.ProtoReflect.Descriptor instead.
 func (*Contest) Descriptor() ([]byte, []int) {
-	return file_model_proto_rawDescGZIP(), []int{13}
+	return file_model_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Contest) GetContestId() string {
@@ -896,8 +951,13 @@ var file_model_proto_rawDesc = []byte{
 	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x6c, 0x61, 0x67, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x04, 0x66, 0x6c, 0x61, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x61, 0x74, 0x69,
 	0x6e, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x72, 0x61, 0x74, 0x69, 0x6e, 0x67,
-	0x22, 0x37, 0x0a, 0x0d, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x4c, 0x69, 0x73,
-	0x74, 0x12, 0x26, 0x0a, 0x05, 0x74, 0x79, 0x70, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x22, 0x3a, 0x0a, 0x0e, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x4c, 0x69, 0x73,
+	0x74, 0x73, 0x12, 0x28, 0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x14, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2e, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x54, 0x79,
+	0x70, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x22, 0x4b, 0x0a, 0x0d,
+	0x65, 0x76, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x12, 0x0a,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d,
+	0x65, 0x12, 0x26, 0x0a, 0x05, 0x74, 0x79, 0x70, 0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b,
 	0x32, 0x10, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2e, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x54, 0x79,
 	0x70, 0x65, 0x52, 0x05, 0x74, 0x79, 0x70, 0x65, 0x73, 0x22, 0x2f, 0x0a, 0x09, 0x65, 0x76, 0x65,
 	0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
@@ -950,39 +1010,41 @@ func file_model_proto_rawDescGZIP() []byte {
 	return file_model_proto_rawDescData
 }
 
-var file_model_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_model_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_model_proto_goTypes = []interface{}{
-	(*BaseResp)(nil),      // 0: model.baseResp
-	(*MedalRank)(nil),     // 1: model.medalRank
-	(*Medal)(nil),         // 2: model.medal
-	(*Medals)(nil),        // 3: model.medals
-	(*DailyEvent)(nil),    // 4: model.dailyEvent
-	(*Event)(nil),         // 5: model.event
-	(*Country)(nil),       // 6: model.country
-	(*EventTypeList)(nil), // 7: model.eventTypeList
-	(*EventType)(nil),     // 8: model.eventType
-	(*EventTable)(nil),    // 9: model.eventTable
-	(*Table)(nil),         // 10: model.table
-	(*EventLists)(nil),    // 11: model.eventLists
-	(*EventList)(nil),     // 12: model.eventList
-	(*Contest)(nil),       // 13: model.contest
+	(*BaseResp)(nil),       // 0: model.baseResp
+	(*MedalRank)(nil),      // 1: model.medalRank
+	(*Medal)(nil),          // 2: model.medal
+	(*Medals)(nil),         // 3: model.medals
+	(*DailyEvent)(nil),     // 4: model.dailyEvent
+	(*Event)(nil),          // 5: model.event
+	(*Country)(nil),        // 6: model.country
+	(*EventTypeLists)(nil), // 7: model.eventTypeLists
+	(*EventTypeList)(nil),  // 8: model.eventTypeList
+	(*EventType)(nil),      // 9: model.eventType
+	(*EventTable)(nil),     // 10: model.eventTable
+	(*Table)(nil),          // 11: model.table
+	(*EventLists)(nil),     // 12: model.eventLists
+	(*EventList)(nil),      // 13: model.eventList
+	(*Contest)(nil),        // 14: model.contest
 }
 var file_model_proto_depIdxs = []int32{
 	2,  // 0: model.medalRank.details:type_name -> model.medal
 	3,  // 1: model.medal.list:type_name -> model.medals
 	5,  // 2: model.dailyEvent.events:type_name -> model.event
 	6,  // 3: model.event.countries:type_name -> model.country
-	8,  // 4: model.eventTypeList.types:type_name -> model.eventType
-	10, // 5: model.eventTable.tables:type_name -> model.table
-	6,  // 6: model.table.countries:type_name -> model.country
-	12, // 7: model.eventLists.event:type_name -> model.eventList
-	13, // 8: model.eventList.contests:type_name -> model.contest
-	6,  // 9: model.contest.countries:type_name -> model.country
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	8,  // 4: model.eventTypeLists.list:type_name -> model.eventTypeList
+	9,  // 5: model.eventTypeList.types:type_name -> model.eventType
+	11, // 6: model.eventTable.tables:type_name -> model.table
+	6,  // 7: model.table.countries:type_name -> model.country
+	13, // 8: model.eventLists.event:type_name -> model.eventList
+	14, // 9: model.eventList.contests:type_name -> model.contest
+	6,  // 10: model.contest.countries:type_name -> model.country
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_model_proto_init() }
@@ -1076,7 +1138,7 @@ func file_model_proto_init() {
 			}
 		}
 		file_model_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EventTypeList); i {
+			switch v := v.(*EventTypeLists); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1088,7 +1150,7 @@ func file_model_proto_init() {
 			}
 		}
 		file_model_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EventType); i {
+			switch v := v.(*EventTypeList); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1100,7 +1162,7 @@ func file_model_proto_init() {
 			}
 		}
 		file_model_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EventTable); i {
+			switch v := v.(*EventType); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1112,7 +1174,7 @@ func file_model_proto_init() {
 			}
 		}
 		file_model_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Table); i {
+			switch v := v.(*EventTable); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1124,7 +1186,7 @@ func file_model_proto_init() {
 			}
 		}
 		file_model_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EventLists); i {
+			switch v := v.(*Table); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1136,7 +1198,7 @@ func file_model_proto_init() {
 			}
 		}
 		file_model_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EventList); i {
+			switch v := v.(*EventLists); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1148,6 +1210,18 @@ func file_model_proto_init() {
 			}
 		}
 		file_model_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EventList); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_model_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Contest); i {
 			case 0:
 				return &v.state
@@ -1166,7 +1240,7 @@ func file_model_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_model_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -17,7 +17,7 @@ LOCALBIN := $(ROOT_DIR)/bin
 $(LOCALBIN):
 	@mkdir -p $(LOCALBIN)
 
-GO_PROD_MODULES = biz pack utils
+GO_PROD_MODULES = biz pack
 GO_MODULES = $(GO_PROD_MODULES) e2e site tools ./examples/dev_your_plugin
 GO_MODULES_EXCLUDE_SITE = $(filter-out site,$(GO_MODULES))
 
