@@ -108,10 +108,14 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 		}
 		// 转换 Competitor 为 Country
 		for _, competitor := range event.Competitors {
+			name, ok := ReverseCountryMap[competitor.Name]
+			if !ok {
+				name = competitor.Name
+			}
 			countries = append(countries, &model.Country{
-				Name:   ReverseCountryMap[competitor.Name],
+				Name:   name,
 				Rating: competitor.Rating,
-				Flag:   consts2.CountryMap[ReverseCountryMap[competitor.Name]], // 如果有旗帜信息，可以在此处填入
+				Flag:   competitor.Flag, // 如果有旗帜信息，可以在此处填入
 			})
 		}
 

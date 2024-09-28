@@ -44,6 +44,7 @@ type Competitor struct {
 	Name           string `json:"name"`
 	WinnerLoserTie string `json:"winnerLoserTie"`
 	Rating         string `json:"mark"`
+	Flag           string `json:"flag"`
 }
 
 type Event struct {

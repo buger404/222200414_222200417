@@ -170,12 +170,13 @@ func parseDailyEvents(data string) ([]*model.Event, error) {
 		competitorsData, ok := groupMap["competitors"].([]interface{})
 		if ok {
 			for _, competitor := range competitorsData {
+
 				competitorMap, ok := competitor.(map[string]interface{})
 				if !ok {
 					return nil, fmt.Errorf("failed to assert competitor data")
 				}
-
-				name := competitorMap["noc"].(string)
+				name := competitorMap["name"].(string)
+				flag := competitorMap["noc"].(string)
 				results, ok := competitorMap["results"].(map[string]interface{})
 				if !ok {
 					continue
@@ -190,6 +191,7 @@ func parseDailyEvents(data string) ([]*model.Event, error) {
 					Name:           name,
 					WinnerLoserTie: winnerLoserTie,
 					Rating:         rating,
+					Flag:           flag,
 				})
 			}
 		}
