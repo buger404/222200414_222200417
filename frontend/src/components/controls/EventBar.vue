@@ -62,6 +62,7 @@ a{
   font-weight: 500;
   line-height: 20px; /* 83.333% */
   letter-spacing: 0.1px;
+  word-break: break-word;
 }
 
 .column{

@@ -72,7 +72,7 @@ fetchEventList();
       <div class="event_box" v-loading="!listLoaded">
         <h2 v-if="listLoaded && !displayList">╰(￣ω￣ｏ) 该日无赛事类型的活动哦~</h2>
         <EventBar
-            v-for="(event, index) in displayList"
+            v-for="(event) in displayList"
             :data="event"
         />
       </div>
@@ -82,6 +82,8 @@ fetchEventList();
 
 <style scoped>
 .event_box {
+  padding-bottom: 60px;
+  flex-grow: 1;
   --el-mask-color: transparent;
   --el-loading-spinner-size: 90px;
   --el-color-primary: #f33e3e;
@@ -111,15 +113,16 @@ h1 {
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.80) 0%, #FFF 100%),
   url('../assets/universal.jpg') white 100% / cover no-repeat;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .sub_container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   overflow: auto;
