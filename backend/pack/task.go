@@ -111,7 +111,7 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 			countries = append(countries, &model.Country{
 				Name:   ReverseCountryMap[competitor.Name],
 				Rating: competitor.Rating,
-				Flag:   consts2.CountryMap[competitor.Name], // 如果有旗帜信息，可以在此处填入
+				Flag:   consts2.CountryMap[ReverseCountryMap[competitor.Name]], // 如果有旗帜信息，可以在此处填入
 			})
 		}
 
