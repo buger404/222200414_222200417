@@ -209,7 +209,7 @@ func parseDailyEvents(data string) ([]*model.Event, error) {
 	return events, nil
 }
 
-func EventTypeList() ([]map[string]string, error) {
+func EventTypeList() ([]*model.EventList, error) {
 	data, err := fetchPageContent(consts.Url)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to fetch page")
@@ -217,7 +217,7 @@ func EventTypeList() ([]map[string]string, error) {
 	return extractEvents(data)
 }
 
-func extractEvents(data string) ([]map[string]string, error) {
+func extractEvents(data string) ([]*model.EventList, error) {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(data))
 	if err != nil {
 		return nil, err
@@ -244,7 +244,7 @@ func extractEvents(data string) ([]map[string]string, error) {
 	}
 
 	// 用于存储最终的事件列表
-	var events []map[string]string
+	var eventLists []*model.EventList
 
 	for _, entry := range medalsTable {
 		entryMap := entry.(map[string]interface{})
@@ -261,23 +261,35 @@ func extractEvents(data string) ([]map[string]string, error) {
 				continue
 			}
 
+			// 构造事件类型列表
+			var eventTypeList model.EventTypeList
+
 			for _, winner := range medalWinners {
 				winnerMap := winner.(map[string]interface{})
 				eventCode := winnerMap["eventCode"].(string)
+				description := winnerMap["eventDescription"].(string)
 
 				// 构造所需的 map 数据
 				event := map[string]string{
-					"name": disciplineName,
+					"name": description,
 					"id":   eventCode,
 				}
 
-				// 添加到事件列表
-				events = append(events, event)
+				// 添加到事件类型列表
+				eventTypeList = append(eventTypeList, event)
 			}
+
+			// 创建一个新的 EventList 并添加到事件列表数组中
+			eventList := &model.EventList{
+				Name: disciplineName,
+				List: eventTypeList,
+			}
+			eventLists = append(eventLists, eventList)
 		}
 	}
 
-	return events, nil
+	// 返回事件列表数组
+	return eventLists, nil
 }
 
 func EventTable(eventID string) ([]*model.EventTable, error) {

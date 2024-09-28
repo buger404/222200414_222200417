@@ -142,7 +142,7 @@ func ConvertEvent(events []*spiderModel.Event) *model.DailyEvent {
 	}
 }
 
-func WrapEventTypeList(eventTypeData spiderModel.EventTypeList) (*model.EventTypeList, error) {
+func WrapEventList(eventTypeData spiderModel.EventTypeList) (*model.EventTypeList, error) {
 	eventTypeList := &model.EventTypeList{}
 
 	// 遍历 eventTypeData 并填充 EventTypeList

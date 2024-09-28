@@ -44,8 +44,13 @@ message country{
   string rating = 3;
 }
 
+message eventList{
+  repeated eventTypeList list = 1;
+}
+
 message eventTypeList{
-  repeated eventType types = 1;
+  string name = 1;
+  repeated eventType types = 2;
 }
 
 message eventType{

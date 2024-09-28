@@ -29,7 +29,7 @@ message eventTypeListReq{
 
 message eventTypeListResp{
   model.baseResp base = 1;
-  model.eventTypeList data = 2;
+  model.eventList data = 2;
 }
 
 message eventTableReq{

@@ -78,7 +78,7 @@ func EventTypeList(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, err, consts2.ERROR)
 		return
 	}
-	resp.Data, err = pack.WrapEventTypeList(userResp)
+	resp.Data, err = pack.WrapEventList(userResp)
 	if err != nil {
 		pack.SendFailResponse(c, err, consts2.ERROR)
 		return
