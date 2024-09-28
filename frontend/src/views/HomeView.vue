@@ -31,13 +31,11 @@ function showAboutUs() {
     </div>
     <MessageBox ref="aboutUs" title="关于我们">
       <p>24秋-软件工程&实践-W班</p>
-      <p>结对作业第一次——原型设计</p>
+      <p>结对作业第二次</p>
       <br>
       <p>队伍：</p>
       <p>222200414  陈志琰</p>
       <p>222200417  林宇涛</p>
-      <br>
-      <p>Made with Figma</p>
     </MessageBox>
   </main>
 </template>
