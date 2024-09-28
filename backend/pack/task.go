@@ -210,6 +210,9 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 	// 遍历所有 EventTable
 	for _, et := range eventTable1 {
 		// 创建新 Table
+		if et.Title == "A组" || et.Title == "B组" || et.Title == "C组" || et.Title == "D组" {
+			continue
+		}
 		table := &model.Table{
 			Title:   et.Title,
 			Period:  et.Period,
@@ -240,12 +243,33 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 		tables = append(tables, table)
 	}
 
+	// 排序 Tables，按指定顺序
+	sort.Slice(tables, func(i, j int) bool {
+		return getOrder(tables[i].Title) < getOrder(tables[j].Title)
+	})
+
 	// 创建最终的 EventTable2
 	eventTable2 := &model.EventTable{
 		Tables: tables,
 	}
 
 	return eventTable2
+}
+
+// getOrder 返回标题的排序值
+func getOrder(title string) int {
+	switch title {
+	case "1/4决赛":
+		return 3
+	case "半决赛":
+		return 6
+	case "铜牌赛":
+		return 6
+	case "金牌赛":
+		return 7
+	default:
+		return 8 // 未知标题，放在最后
+	}
 }
 
 func ConvertContestListToEventList(contestList []*spiderModel.ContestList) *model.EventLists {
