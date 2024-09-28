@@ -262,7 +262,7 @@ func getOrder(title string) int {
 	case "1/4决赛":
 		return 3
 	case "半决赛":
-		return 6
+		return 5
 	case "铜牌赛":
 		return 6
 	case "金牌赛":
