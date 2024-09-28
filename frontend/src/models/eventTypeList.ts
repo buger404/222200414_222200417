@@ -1,30 +1,27 @@
 export interface EventTypeList {
     base: Base;
-    /**
-     * 项目信息
-     */
     data: Data;
     [property: string]: any;
 }
 
-/**
- * base
- */
 export interface Base {
     code: number;
-    msg: string;
+    message: string;
     [property: string]: any;
 }
 
-/**
- * 项目信息
- */
 export interface Data {
-    types: EventType[];
+    list: Type[];
     [property: string]: any;
 }
 
 export interface EventType {
+    types: Item[];
+    name: string;
+    [property: string]: any;
+}
+
+export interface EventTypeItem {
     id: string;
     name: string;
     [property: string]: any;

@@ -33,6 +33,11 @@ function fetchMedalList() {
       plain: true,
     });
   }).catch((error) => {
+    ElMessage({
+      message: '网络错误，请重试',
+      type: 'error',
+      plain: true,
+    });
     console.error('请求失败', error);
   })
 }
