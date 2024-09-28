@@ -378,7 +378,10 @@ func parseEvents(data string, url string) ([]*model.EventTable, error) {
 					continue
 				}
 				rating := i["resultData"].(string)
-				winnerLoserTie := i["resultWLT"].(string)
+				winnerLoserTie, ok := i["resultWLT"].(string)
+				if !ok {
+					continue
+				}
 				participant := i["participant"].(map[string]interface{})
 				organisation, ok := participant["organisation"].(map[string]interface{})
 				if !ok {
