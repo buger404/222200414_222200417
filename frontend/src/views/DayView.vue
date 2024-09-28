@@ -52,33 +52,36 @@ fetchEventList();
 
 <template>
   <main class="container">
-    <div class="row">
-      <h1>每日赛程</h1>
-      <div class="date_picker">
-        <el-date-picker
-            @change="fetchEventList()"
-            v-model="date"
-            type="date"
-            placeholder="选择日期..."
-            format="MM-DD"
-            :disabled-date="isDateInvalid"
+    <div class="sub_container">
+      <div class="row">
+        <h1>每日赛程</h1>
+        <div class="date_picker">
+          <el-date-picker
+              @change="fetchEventList()"
+              v-model="date"
+              type="date"
+              placeholder="选择日期..."
+              format="MM-DD"
+              :disabled-date="isDateInvalid"
+          />
+        </div>
+      </div>
+      <div>
+        <h2 style="margin-top: -15px; margin-bottom: 15px;">注：赛事时间为巴黎时间(UTC+2)。</h2>
+      </div>
+      <div class="event_box" v-loading="!listLoaded">
+        <h2 v-if="listLoaded && !displayList">╰(￣ω￣ｏ) 该日无赛事类型的活动哦~</h2>
+        <EventBar
+            v-for="(event, index) in displayList"
+            :data="event"
         />
       </div>
-    </div>
-    <div class="event_box" v-loading="!listLoaded">
-      <EventBar
-          v-for="(event, index) in displayList"
-          :data="event"
-      />
     </div>
   </main>
 </template>
 
 <style scoped>
 .event_box {
-  height: 100%;
-  overflow: auto;
-  scrollbar-width: none;
   --el-mask-color: transparent;
   --el-loading-spinner-size: 90px;
   --el-color-primary: #f33e3e;
@@ -110,11 +113,17 @@ h1 {
 .container {
   display: flex;
   flex-direction: column;
-  padding: 130px 7vw 0;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.80) 0%, #FFF 100%),
   url('../assets/universal.jpg') white 100% / cover no-repeat;
   width: 100%;
   height: 100%;
+}
+
+.sub_container {
+  width: 100%;
+  height: 100%;
   overflow: auto;
+  margin-top: 72px;
+  padding: 58px 7vw 120px;
 }
 </style>

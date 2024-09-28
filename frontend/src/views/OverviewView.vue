@@ -110,8 +110,9 @@ fetchMedalList();
 <style scoped>
 .rank_box {
   height: 100%;
+  flex-grow: 1;
   overflow: auto;
-  scrollbar-width: none;
+  padding: 0 7vw 130px;
   --el-mask-color: transparent;
   --el-loading-spinner-size: 90px;
   --el-color-primary: #f33e3e;
@@ -159,6 +160,7 @@ fetchMedalList();
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
+  padding: 0 7vw;
   align-items: center;
 }
 
@@ -173,7 +175,7 @@ h1 {
 .container {
   display: flex;
   flex-direction: column;
-  padding: 130px 7vw 0;
+  padding: 130px 0 0;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.80) 0%, #FFF 100%),
   url('../assets/overview.jpg') white 100% / cover no-repeat;
   width: 100%;
