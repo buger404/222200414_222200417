@@ -16,6 +16,7 @@ const selectedType = ref<EventType>();
 const selectedItem = ref<EventTypeItem>();
 
 const tables = ref<Table[]>();
+const periodTable = ref<Array<Table[]>>();
 
 function fetchEventTypes(): void {
   typeListLoaded.value = false;
@@ -41,6 +42,7 @@ function fetchEventTypes(): void {
 function fetchTableData(): void {
   tableLoaded.value = false;
   tables.value = [];
+  periodTable.value = [[], [], []];
   axios.get('/api/event/table',{
     params: {
       eventID : selectedItem.value?.id
@@ -48,6 +50,21 @@ function fetchTableData(): void {
   }).then((response : TableList) => {
     console.log(response);
     tables.value = response.data.tables;
+    if (tables.value){
+      periodTable.value[0] = tables.value.filter((table) => table.title.includes('1/4决赛'));
+      periodTable.value[1] = tables.value.filter((table) => table.title.includes('半决赛'));
+      periodTable.value[2] = tables.value.filter(
+          (table) => (table.title.includes('金牌赛') || table.title.includes('银牌赛') ||
+                     table.title.includes('铜牌赛') || table.title.includes('决赛'))
+                      && !periodTable.value[0].includes(table)
+                      && !periodTable.value[1].includes(table))
+          .sort((a, b) => {
+            const order = ['金牌赛', '银牌赛', '铜牌赛'];
+            const indexA = order.findIndex(keyword => a.title.includes(keyword));
+            const indexB = order.findIndex(keyword => b.title.includes(keyword));
+            return indexA - indexB;
+          });
+    }
     tableLoaded.value = true;
   }).catch((error) => {
     ElMessage({
@@ -131,12 +148,14 @@ fetchEventTypes();
             <div
                 class="title"
                 style="margin-right: 80px; border: 2px solid #D9D9D9; background: white;"
+                v-if="periodTable[0].length > 0"
             >
               <h2 style="width: 100%;">1/4 决赛</h2>
             </div>
             <div
                 class="title"
                 style="margin-right: 80px; border: 2px solid black; background: #F2BA71;"
+                v-if="periodTable[1].length > 0"
             >
               <h2 style="width: 100%;">半决赛</h2>
             </div>
@@ -149,47 +168,37 @@ fetchEventTypes();
           </div>
 
           <div style="display: flex; flex-direction: row; padding: 0 7vw;">
-            <div class="table_item">
+            <div class="table_item" v-if="periodTable[0].length > 0">
               <VSTable
-                  v-for="item in tables.filter((table) => table.period.endsWith('1/4决赛'))"
+                  v-for="item in periodTable[0]"
                   :data="item"
                   style="margin: calc(30px) 0"
               />
             </div>
 
-            <div style="width: 80px">
+            <div style="width: 80px" v-if="periodTable[0].length > 0">
               <VSLine style="width: 100%; height: calc(30px * 2 + 143px); margin: calc(30px + 143px / 2) 0;"/>
               <VSLine style="width: 100%; height: calc(30px * 2 + 143px); margin-top: calc((30px + 143px / 2) * 2);"/>
             </div>
 
-            <div class="table_item">
+            <div class="table_item" v-if="periodTable[1].length > 0">
               <VSTable
-                  v-for="item in tables.filter((table) => table.period.endsWith('半决赛'))"
+                  v-for="item in periodTable[1]"
                   :data="item"
                   style="margin: calc(30px * 2 + 143px / 2) 0"
               />
             </div>
 
-            <div style="width: 80px">
+            <div style="width: 80px" v-if="periodTable[1].length > 0">
               <VSLine style="width: 100%; height: calc((30px * 2 + 143px / 2) * 2 + 143px);
               margin: calc((30px * 2 + 143px / 2) + 143px / 2) 0;"/>
             </div>
 
             <div class="table_item">
               <VSTable
-                  v-for="item in tables.filter((table) => table.period.endsWith('金牌赛'))"
+                  v-for="(item, index) in periodTable[2]"
                   :data="item"
-                  style="margin-top: calc(30px * 4 + 143px * 1.5)"
-              />
-              <VSTable
-                  v-for="item in tables.filter((table) => table.period.endsWith('银牌赛'))"
-                  :data="item"
-                  style="margin-top: 80px"
-              />
-              <VSTable
-                  v-for="item in tables.filter((table) => table.period.endsWith('铜牌赛'))"
-                  :data="item"
-                  style="margin-top: 80px"
+                  :style="index > 0 ? 'margin-top: 80px' : 'margin-top: calc(30px * 4 + 143px * 1.5)'"
               />
             </div>
           </div>

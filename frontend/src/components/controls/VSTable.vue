@@ -1,10 +1,28 @@
 <script setup lang="ts">
 import type {Table} from "@/models/tableList";
 import CountryFlag from "@/components/controls/CountryFlag.vue";
+import {useTableStore} from "@/stores/counter";
+
+const store = useTableStore();
 
 const props = defineProps<{
   data : Table
 }>();
+
+function setActiveCountry(index : number) {
+  store.country = props.data.countries[index].name;
+}
+
+function clearActiveCountry(index : number) {
+  if (!isActiveCountry(index)) {
+    return;
+  }
+  store.country = '';
+}
+
+function isActiveCountry(index : number) {
+  return store.country && store.country == props.data.countries[index].name;
+}
 </script>
 
 <template>
@@ -14,14 +32,23 @@ const props = defineProps<{
     </div>
     <div class="sub_bar">
       <div style="flex-grow: 1;">
-        <div class="rating_bar">
+        <div
+            :class="isActiveCountry(0) ? 'rating_bar_active' : 'rating_bar'"
+            @mouseenter="setActiveCountry(0)"
+            @mouseleave="clearActiveCountry(0)"
+        >
           <div class="row">
             <CountryFlag :country="data.countries[0].flag"/>
             <h3 class="country_name" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].name }} </h3>
           </div>
           <h3 class="rating" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].rating }} </h3>
         </div>
-        <div class="rating_bar" style="margin-top: 10px;">
+        <div
+            :class="isActiveCountry(1) ? 'rating_bar_active' : 'rating_bar'"
+            style="margin-top: 10px;"
+            @mouseenter="setActiveCountry(1)"
+            @mouseleave="clearActiveCountry(1)"
+        >
           <div class="row">
             <CountryFlag :country="data.countries[1].flag"/>
             <h3 class="country_name" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].name }} </h3>
@@ -87,5 +114,15 @@ h3 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  background: white;
+  transition: 0.5s all;
+}
+
+.rating_bar_active {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  scale: 1.1;
+  transition: 0.5s all;
 }
 </style>
