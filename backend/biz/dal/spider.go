@@ -383,15 +383,17 @@ func parseEvents(data string, url string) ([]*model.EventTable, error) {
 
 				}
 				participant := i["participant"].(map[string]interface{})
+				name := participant["name"].(string)
 				organisation, ok := participant["organisation"].(map[string]interface{})
 				if !ok {
 					continue
 				}
-				country := organisation["description"].(string)
+				flag := organisation["code"].(string)
 				competitors = append(competitors, &model.Competitor{
-					Name:           country,
+					Name:           name,
 					Rating:         rating,
 					WinnerLoserTie: winnerLoserTie,
+					Flag:           flag,
 				})
 			}
 			// 创建事件结构体并添加到列表

@@ -205,6 +205,10 @@ func WrapEventList(eventTypeData []*spiderModel.EventList) *model.EventTypeLists
 }
 
 func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable {
+	ReverseCountryMap := make(map[string]string)
+	for k, v := range consts2.CountryMap {
+		ReverseCountryMap[v] = k
+	}
 	var tables []*model.Table
 
 	// 遍历所有 EventTable
@@ -223,10 +227,14 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 		// 转换 Competitors 为 Countries
 		var countries []*model.Country
 		for i, competitor := range et.Competitors {
+			name := ReverseCountryMap[competitor.Flag]
+			if name != competitor.Name {
+				name = competitor.Name
+			}
 			country := &model.Country{
 				Name:   competitor.Name,
 				Rating: competitor.Rating,
-				Flag:   consts2.CountryMap[competitor.Name], // 从 CountryMap 获取国家标志
+				Flag:   competitor.Flag, // 从 CountryMap 获取国家标志
 			}
 			countries = append(countries, country)
 
