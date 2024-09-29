@@ -409,8 +409,8 @@ func parseEvents(data string, url string) ([]*model.EventTable, error) {
 	return parsedEvents, nil
 }
 
-func ContestList() ([]*model.ContestList, error) {
-	url := consts.FootballUrl
+func ContestList(eventID string) ([]*model.ContestList, error) {
+	url := "https://olympics.com/OG2024/data/GLO_EventGames~comp=OG2024~event=" + eventID + "~lang=CHI.json"
 	data, err := fetchPageContent(url)
 	if err != nil {
 		return nil, err
@@ -487,7 +487,7 @@ func parseContest(data string) ([]*model.ContestList, error) {
 					continue
 				}
 				rating := i["resultData"].(string)
-				winnerLoserTie := i["resultWLT"].(string)
+				winnerLoserTie, ok := i["resultWLT"].(string)
 				participant := i["participant"].(map[string]interface{})
 				organisation, ok := participant["organisation"].(map[string]interface{})
 				if !ok {

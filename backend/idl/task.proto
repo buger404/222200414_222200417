@@ -42,6 +42,7 @@ message eventTableResp{
 }
 
 message eventListReq{
+  string eventID = 1;
 }
 
 message eventListResp{

@@ -37,6 +37,6 @@ func (task *TaskService) EventTable(ctx context.Context, req *task.EventTableReq
 }
 
 func (task *TaskService) ContestList(ctx context.Context, req *task.EventListReq) ([]*model.ContestList, error) {
-	data, err := dal.ContestList()
+	data, err := dal.ContestList(req.EventID)
 	return data, err
 }
