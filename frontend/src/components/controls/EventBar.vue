@@ -105,6 +105,7 @@ a{
 }
 
 .box{
+  cursor: pointer;
   border-radius: 26px;
   border: 2px solid #F18787;
   background: white;

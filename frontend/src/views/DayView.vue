@@ -4,6 +4,7 @@ import axios from "@/utils/axios";
 import {ElMessage} from "element-plus";
 import type {DayEvent, DayEventList} from "@/models/dayEventList";
 import EventBar from "@/components/controls/EventBar.vue";
+import EventListBox from "@/components/EventListBox.vue";
 
 const date = ref(new Date("2024-07-24"))
 
@@ -53,6 +54,12 @@ function refreshDisplayList() {
 }
 
 fetchEventList();
+
+const eventListBox = ref<EventListBox>();
+
+function showEventListBox(title : string, event : string) {
+  eventListBox.value.open(title, event);
+}
 </script>
 
 <template>
@@ -77,11 +84,13 @@ fetchEventList();
       <div class="event_box" v-loading="!listLoaded">
         <h2 v-if="listLoaded && !displayList">╰(￣ω￣ｏ) 该日无赛事类型的活动哦~</h2>
         <EventBar
+            @click="showEventListBox(event.group, event.id)"
             v-for="(event) in displayList"
             :data="event"
         />
       </div>
     </div>
+    <EventListBox ref="eventListBox"/>
   </main>
 </template>
 
