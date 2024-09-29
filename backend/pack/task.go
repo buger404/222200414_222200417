@@ -226,6 +226,7 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 			Special: et.Special,
 		}
 
+		table.Winner = 2
 		// 转换 Competitors 为 Countries
 		var countries []*model.Country
 		for i, competitor := range et.Competitors {
@@ -255,15 +256,29 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 
 	// 排序 Tables，按指定顺序，并根据国家组合进行匹配
 	sort.Slice(tables, func(i, j int) bool {
-		// 先按阶段顺序排序
-		orderI, orderJ := getOrder(tables[i].Title), getOrder(tables[j].Title)
-		if orderI != orderJ {
-			return orderI < orderJ
-		}
-
-		// 如果阶段相同，按国家组合匹配
-		return matchCountries(tables[i].Countries, tables[j].Countries)
+		return getOrder(tables[i].Title) < getOrder(tables[j].Title)
 	})
+
+	// 对 1/4 决赛内部进行排序
+	quarterFinals := []*model.Table{}
+	otherTables := []*model.Table{}
+
+	// 将 1/4 决赛和其他比赛分开处理
+	for _, table := range tables {
+		if table.Title == "1/4决赛" {
+			quarterFinals = append(quarterFinals, table)
+		} else {
+			otherTables = append(otherTables, table)
+		}
+	}
+
+	// 针对 1/4 决赛内部按照国家组合进行排序
+	sort.Slice(quarterFinals, func(i, j int) bool {
+		return matchCountriesWithSemiFinal(quarterFinals[i].Countries, quarterFinals[j].Countries, tables)
+	})
+
+	// 将排序好的 1/4 决赛和其他比赛合并
+	tables = append(quarterFinals, otherTables...)
 
 	// 创建最终的 EventTable2
 	eventTable2 := &model.EventTable{
@@ -271,6 +286,36 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 	}
 
 	return eventTable2
+}
+
+// matchCountriesWithSemiFinal 返回 i 是否应该排在 j 前面，基于半决赛中的国家组合匹配
+func matchCountriesWithSemiFinal(countriesI, countriesJ []*model.Country, allTables []*model.Table) bool {
+	// 遍历所有的半决赛表格，查找与 countriesI 和 countriesJ 匹配的情况
+	for _, table := range allTables {
+		if table.Title == "半决赛" {
+			// 如果半决赛中有与 countriesI 匹配的，则 i 应该排在前面
+			if containsCountries(table.Countries, countriesI) {
+				return true
+			}
+			// 如果半决赛中有与 countriesJ 匹配的，则 j 应该排在前面
+			if containsCountries(table.Countries, countriesJ) {
+				return false
+			}
+		}
+	}
+	return false // 如果没有匹配，则顺序不变
+}
+
+// containsCountries 检查国家组合是否匹配
+func containsCountries(semiFinalCountries, quarterFinalCountries []*model.Country) bool {
+	for _, semiFinalCountry := range semiFinalCountries {
+		for _, quarterFinalCountry := range quarterFinalCountries {
+			if semiFinalCountry.Name == quarterFinalCountry.Name {
+				return true // 找到匹配的国家组合
+			}
+		}
+	}
+	return false // 没有匹配
 }
 
 // getOrder 返回比赛阶段的排序值
@@ -287,18 +332,6 @@ func getOrder(title string) int {
 	default:
 		return 8 // 未知标题，放在最后
 	}
-}
-
-// matchCountries 返回 i 是否应该排在 j 前面，基于国家组合匹配
-func matchCountries(countriesI, countriesJ []*model.Country) bool {
-	for _, countryI := range countriesI {
-		for _, countryJ := range countriesJ {
-			if countryI.Name == countryJ.Name {
-				return true // 找到匹配的国家组合，i 排在 j 前面
-			}
-		}
-	}
-	return false // 没有匹配的国家组合，顺序不变
 }
 
 func ConvertContestListToEventList(contestList []*spiderModel.ContestList) *model.EventLists {
