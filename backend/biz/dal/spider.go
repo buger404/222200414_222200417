@@ -453,7 +453,7 @@ func parseContest(data string) ([]*model.ContestList, error) {
 			if !ok {
 				return nil, fmt.Errorf("failed to assert unit data")
 			}
-
+			id, ok := unitMap["code"].(string)
 			// 从单位中提取所需字段
 			shortDescription, ok := unitMap["shortDescription"].(string)
 			if !ok {
@@ -467,7 +467,7 @@ func parseContest(data string) ([]*model.ContestList, error) {
 			}
 
 			startDate, ok := schedule["startDate"].(string)
-			unitNum, ok := schedule["unitNum"].(string)
+			//unitNum, ok := schedule["unitNum"].(string)
 
 			result, ok := schedule["result"].(map[string]interface{})
 			if !ok {
@@ -503,7 +503,7 @@ func parseContest(data string) ([]*model.ContestList, error) {
 
 			// 创建 Contest
 			contestItem := &model.Contest{
-				ID:      unitNum,
+				ID:      id,
 				Country: competitors,
 			}
 
