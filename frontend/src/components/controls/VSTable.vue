@@ -39,7 +39,14 @@ function isActiveCountry(index : number) {
         >
           <div class="row">
             <CountryFlag :country="data.countries[0].flag"/>
-            <h3 class="country_name" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].name }} </h3>
+            <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="data.countries[0].name"
+                placement="top"
+            >
+              <h3 class="country_name" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].name }} </h3>
+            </el-tooltip>
           </div>
           <h3 class="rating" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].rating }} </h3>
         </div>
@@ -51,7 +58,14 @@ function isActiveCountry(index : number) {
         >
           <div class="row">
             <CountryFlag :country="data.countries[1].flag"/>
-            <h3 class="country_name" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].name }} </h3>
+            <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="data.countries[1].name"
+                placement="bottom"
+            >
+              <h3 class="country_name" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].name }} </h3>
+            </el-tooltip>
           </div>
           <h3 class="rating" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].rating }} </h3>
         </div>
@@ -66,7 +80,13 @@ function isActiveCountry(index : number) {
 
 <style scoped>
 .country_name {
+  word-break: break-all;
   margin-left: 10px;
+  text-overflow: ellipsis;
+  height: 22px;
+  transition: 0.5s all;
+  overflow: scroll;
+  scrollbar-width: none;
 }
 
 h3 {
@@ -74,6 +94,7 @@ h3 {
 }
 
 .rating {
+  margin-left: 10px;
   color: black;
   text-align: right;
   font-size: 24px;
@@ -114,7 +135,6 @@ h3 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: white;
   transition: 0.5s all;
 }
 
@@ -124,5 +144,6 @@ h3 {
   justify-content: space-between;
   scale: 1.1;
   transition: 0.5s all;
+  z-index: 4;
 }
 </style>
