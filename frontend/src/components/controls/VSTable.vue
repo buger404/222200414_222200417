@@ -9,24 +9,30 @@ const props = defineProps<{
 
 <template>
   <div class="bar" style="width: 100%;">
-    <div style="flex-grow: 1;">
-      <div class="rating_bar">
-        <div class="row">
-          <CountryFlag :country="data.countries[0].flag"/>
-          <h3 class="country_name" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].name }} </h3>
-        </div>
-        <h3 class="rating" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].rating }} </h3>
-      </div>
-      <div class="rating_bar" style="margin-top: 10px;">
-        <div class="row">
-          <CountryFlag :country="data.countries[1].flag"/>
-          <h3 class="country_name" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].name }} </h3>
-        </div>
-        <h3 class="rating" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].rating }} </h3>
-      </div>
+    <div class="sub_bar" v-if="data.period">
+      <h3 style="font-weight: bold; margin-bottom: 10px; margin-top: -5px;"> {{ data.period }}</h3>
     </div>
-    <div v-if="data.special">
-      <h3> {{ data.special }}</h3>
+    <div class="sub_bar">
+      <div style="flex-grow: 1;">
+        <div class="rating_bar">
+          <div class="row">
+            <CountryFlag :country="data.countries[0].flag"/>
+            <h3 class="country_name" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].name }} </h3>
+          </div>
+          <h3 class="rating" :style="'color: ' + (data.winner == 1 ? '#F33E3E' : 'black')"> {{ data.countries[0].rating }} </h3>
+        </div>
+        <div class="rating_bar" style="margin-top: 10px;">
+          <div class="row">
+            <CountryFlag :country="data.countries[1].flag"/>
+            <h3 class="country_name" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].name }} </h3>
+          </div>
+          <h3 class="rating" :style="'color: ' + (data.winner == 2 ? '#F33E3E' : 'black')"> {{ data.countries[1].rating }} </h3>
+        </div>
+      </div>
+      <div v-if="data.special"
+           style="text-align: center; display: flex; justify-content: center; flex-direction: column; margin-left: 15px; margin-right: -5px;">
+        <h2 style="font-weight: bold;"> {{ data.special }}</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -50,10 +56,15 @@ h3 {
   letter-spacing: 0.1px;
 }
 
-.bar{
+.sub_bar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.bar{
+  display: flex;
+  flex-direction: column;
   padding: 20px 25px;
   border-radius: 26px;
   border: 2px solid #D9D9D9;

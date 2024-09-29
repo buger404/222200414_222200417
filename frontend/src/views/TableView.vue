@@ -6,6 +6,7 @@ import axios from "@/utils/axios";
 import {ElMessage} from "element-plus";
 import type {Table, TableList} from "@/models/tableList";
 import VSTable from "@/components/controls/VSTable.vue";
+import VSLine from "@/components/controls/VSLine.vue";
 
 const typeListLoaded = ref(false);
 const tableLoaded = ref(false);
@@ -157,24 +158,28 @@ fetchEventTypes();
             </div>
 
             <div style="width: 80px">
+              <VSLine style="width: 100%; height: calc(30px * 2 + 143px); margin: calc(30px + 143px / 2) 0;"/>
+              <VSLine style="width: 100%; height: calc(30px * 2 + 143px); margin-top: calc((30px + 143px / 2) * 2);"/>
             </div>
 
             <div class="table_item">
               <VSTable
                   v-for="item in tables.filter((table) => table.period.endsWith('半决赛'))"
                   :data="item"
-                  style="margin: calc(30px * 2 + 114px / 2) 0"
+                  style="margin: calc(30px * 2 + 143px / 2) 0"
               />
             </div>
 
             <div style="width: 80px">
+              <VSLine style="width: 100%; height: calc((30px * 2 + 143px / 2) * 2 + 143px);
+              margin: calc((30px * 2 + 143px / 2) + 143px / 2) 0;"/>
             </div>
 
             <div class="table_item">
               <VSTable
                   v-for="item in tables.filter((table) => table.period.endsWith('金牌赛'))"
                   :data="item"
-                  style="margin-top: calc(30px * 4 + 114px * 1.5)"
+                  style="margin-top: calc(30px * 4 + 143px * 1.5)"
               />
               <VSTable
                   v-for="item in tables.filter((table) => table.period.endsWith('银牌赛'))"
