@@ -11,8 +11,6 @@ const date = ref(new Date("2024-07-24"))
 const startDate = new Date("2024-07-23");
 const endDate = new Date("2024-08-12");
 
-const options = { month: '2-digit', day: '2-digit' };
-
 function isDateInvalid(date: Date): boolean {
   return !(date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime());
 }
@@ -27,10 +25,10 @@ function fetchEventList() {
   displayList.value = [];
   axios.get('/api/event/daily', {
     params: {
-      date: date.value.toLocaleDateString('en-US', options).replace(',', '').replace('/', '-')
+      date: date.value.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }).replace(',', '').replace('/', '-')
     }
   }).then((response) => {
-    eventList = response;
+    eventList = response.data;
     listLoaded.value = true;
     console.log(eventList);
     refreshDisplayList();
@@ -55,7 +53,7 @@ function refreshDisplayList() {
 
 fetchEventList();
 
-const eventListBox = ref<EventListBox>();
+const eventListBox = ref();
 
 function showEventListBox(title : string, event : string) {
   eventListBox.value.open(title, event);

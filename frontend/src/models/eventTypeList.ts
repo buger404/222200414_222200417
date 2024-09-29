@@ -11,12 +11,12 @@ export interface Base {
 }
 
 export interface Data {
-    list: Type[];
+    list: EventType[];
     [property: string]: any;
 }
 
 export interface EventType {
-    types: Item[];
+    types: EventTypeItem[];
     name: string;
     [property: string]: any;
 }

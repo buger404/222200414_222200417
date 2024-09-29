@@ -3,7 +3,7 @@ import Button from "@/components/controls/Button.vue";
 import { ref, onMounted } from "vue";
 import {ArrowDown, Search} from '@element-plus/icons-vue'
 import CountryRankBar from "@/components/controls/CountryRankBar.vue";
-import { MedalList, MedalListData } from "@/models/modelMedalList";
+import type { MedalList, MedalListData } from "@/models/modelMedalList";
 import axios from '@/utils/axios';
 import {ElMessage} from "element-plus";
 
@@ -23,7 +23,7 @@ function fetchMedalList() {
       medalSorts: sortMethod.value.toString()
     }
   }).then((response) => {
-    medalList = response;
+    medalList = response.data;
     listLoaded.value = true;
     console.log(medalList);
     refreshDisplayList();

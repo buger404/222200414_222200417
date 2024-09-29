@@ -22,8 +22,8 @@ function fetchEventTypes(): void {
   typeListLoaded.value = false;
   types.value = [];
   axios.get('/api/event/typelist')
-  .then((response : EventTypeList) => {
-    types.value = response.data.list;
+  .then((response) => {
+    types.value = response.data.data.list;
     console.log(response);
     selectedType.value = types.value?.find((item : EventType) : boolean => { return item.name == "乒乓球"; })
     selectedItem.value = selectedType.value?.types[0];
@@ -47,17 +47,22 @@ function fetchTableData(): void {
     params: {
       eventID : selectedItem.value?.id
     }
-  }).then((response : TableList) => {
+  }).then((response) => {
     console.log(response);
-    tables.value = response.data.tables;
-    if (tables.value){
+    tables.value = response.data.data.tables;
+    if (tables.value && periodTable.value){
       periodTable.value[0] = tables.value.filter((table) => table.title.includes('1/4决赛'));
       periodTable.value[1] = tables.value.filter((table) => table.title.includes('半决赛'));
       periodTable.value[2] = tables.value.filter(
-          (table) => (table.title.includes('金牌赛') || table.title.includes('银牌赛') ||
-                     table.title.includes('铜牌赛') || table.title.includes('决赛'))
-                      && !periodTable.value[0].includes(table)
-                      && !periodTable.value[1].includes(table))
+          (table) => {
+            if (!periodTable.value){
+              return false;
+            }
+            return (table.title.includes('金牌赛') || table.title.includes('银牌赛') ||
+                    table.title.includes('铜牌赛') || table.title.includes('决赛'))
+                    && !periodTable.value[0].includes(table)
+                    && !periodTable.value[1].includes(table);
+          })
           .sort((a, b) => {
             const order = ['金牌赛', '银牌赛', '铜牌赛'];
             const indexA = order.findIndex(keyword => a.title.includes(keyword));
@@ -120,6 +125,7 @@ fetchEventTypes();
                 class="drop_down"
                 style="margin-left: 20px;"
                 max-height="60vh"
+                v-if="selectedItem"
             >
               <el-button type="primary">
                 {{ selectedItem.name }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
@@ -144,7 +150,7 @@ fetchEventTypes();
       </div>
 
       <div style="width: 100%; flex-grow: 1; overflow: auto;">
-        <div class="table_box" v-if="tableLoaded && tables">
+        <div class="table_box" v-if="tableLoaded && tables && periodTable">
           <div class="period_header">
             <div
                 class="title"

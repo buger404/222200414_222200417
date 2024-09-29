@@ -36,7 +36,7 @@ export interface Contest {
  * country
  */
 export interface Country {
-    flag?:  string;
+    flag:  string;
     name:   string;
     rating: string;
     [property: string]: any;

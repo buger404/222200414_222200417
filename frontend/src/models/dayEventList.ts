@@ -35,7 +35,7 @@ export interface DayEvent {
  * country
  */
 export interface Country {
-    flag?: string;
+    flag: string;
     name: string;
     rating: string;
     [property: string]: any;

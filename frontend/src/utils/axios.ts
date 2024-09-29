@@ -14,13 +14,4 @@ instance.interceptors.request.use(
     }
 );
 
-instance.interceptors.response.use(
-    (response) => {
-        return response.data; // 直接返回数据
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
-
 export default instance;

@@ -34,11 +34,13 @@ function fetchEventList() {
     params: {
       eventID: eventID.value.slice(0, 22)
     }
-  }).then((response : AllEventList) => {
+  }).then((response) => {
     listLoaded.value = true;
-    groups.value = response.data.event;
-    currentGroup.value = groups.value.find((g) => g.contests.findIndex((c) => c.contest_id == eventID.value) != -1);
-    console.log(currentGroup.value);
+    groups.value = response.data.data.event;
+    if (groups.value){
+      currentGroup.value = groups.value.find((g) => g.contests.findIndex((c) => c.contest_id == eventID.value) != -1);
+      console.log(currentGroup.value);
+    }
     console.log(response);
   }).catch((error) => {
     listLoaded.value = true;
@@ -64,7 +66,7 @@ defineExpose({ open });
       <div class="panel" v-loading="!listLoaded">
         <div class="row" style="width: 100%; align-items: end;">
           <h1>{{ title }} 详细赛程</h1>
-          <div class="row" v-if="groups">
+          <div class="row" v-if="groups && currentGroup">
             <h3 style="margin-right: 10px; font-size: 18px;">项目组别：</h3>
             <el-dropdown
                 class="drop_down"
