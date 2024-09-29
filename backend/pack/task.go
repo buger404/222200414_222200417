@@ -209,21 +209,23 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 	for k, v := range consts2.CountryMap {
 		ReverseCountryMap[v] = k
 	}
+
 	var tables []*model.Table
 
 	// 遍历所有 EventTable
 	for _, et := range eventTable1 {
-		// 创建新 Table
+		// 跳过不需要的组
 		if et.Title == "A组" || et.Title == "B组" || et.Title == "C组" || et.Title == "D组" {
 			continue
 		}
+
+		// 创建新的 Table
 		table := &model.Table{
 			Title:   et.Title,
 			Period:  et.Period,
 			Special: et.Special,
 		}
 
-		table.Winner = 2
 		// 转换 Competitors 为 Countries
 		var countries []*model.Country
 		for i, competitor := range et.Competitors {
@@ -232,7 +234,7 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 				name = competitor.Name
 			}
 			country := &model.Country{
-				Name:   competitor.Name,
+				Name:   name, // 使用转换后的国家名称
 				Rating: competitor.Rating,
 				Flag:   competitor.Flag, // 从 CountryMap 获取国家标志
 			}
@@ -251,9 +253,16 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 		tables = append(tables, table)
 	}
 
-	// 排序 Tables，按指定顺序
+	// 排序 Tables，按指定顺序，并根据国家组合进行匹配
 	sort.Slice(tables, func(i, j int) bool {
-		return getOrder(tables[i].Title) < getOrder(tables[j].Title)
+		// 先按阶段顺序排序
+		orderI, orderJ := getOrder(tables[i].Title), getOrder(tables[j].Title)
+		if orderI != orderJ {
+			return orderI < orderJ
+		}
+
+		// 如果阶段相同，按国家组合匹配
+		return matchCountries(tables[i].Countries, tables[j].Countries)
 	})
 
 	// 创建最终的 EventTable2
@@ -264,7 +273,7 @@ func ConvertEventTable(eventTable1 []*spiderModel.EventTable) *model.EventTable 
 	return eventTable2
 }
 
-// getOrder 返回标题的排序值
+// getOrder 返回比赛阶段的排序值
 func getOrder(title string) int {
 	switch title {
 	case "1/4决赛":
@@ -278,6 +287,18 @@ func getOrder(title string) int {
 	default:
 		return 8 // 未知标题，放在最后
 	}
+}
+
+// matchCountries 返回 i 是否应该排在 j 前面，基于国家组合匹配
+func matchCountries(countriesI, countriesJ []*model.Country) bool {
+	for _, countryI := range countriesI {
+		for _, countryJ := range countriesJ {
+			if countryI.Name == countryJ.Name {
+				return true // 找到匹配的国家组合，i 排在 j 前面
+			}
+		}
+	}
+	return false // 没有匹配的国家组合，顺序不变
 }
 
 func ConvertContestListToEventList(contestList []*spiderModel.ContestList) *model.EventLists {
