@@ -53,8 +53,8 @@ function fetchTableData(): void {
     if (tables.value && periodTable.value){
       periodTable.value[0] = tables.value.filter((table) => table.title.includes('1/4决赛'));
       periodTable.value[1] = tables.value.filter((table) => table.title.includes('半决赛'));
-      periodTable.value[2] = tables.value.filter(
-          (table) => {
+      periodTable.value[2] =
+          tables.value.filter((table) => {
             if (!periodTable.value){
               return false;
             }
@@ -69,6 +69,20 @@ function fetchTableData(): void {
             const indexB = order.findIndex(keyword => b.title.includes(keyword));
             return indexA - indexB;
           });
+      if (periodTable.value && periodTable.value[1]) {
+        periodTable.value[0].sort((a, b) => {
+          if (!periodTable.value) {
+            return 0;
+          }
+          return periodTable.value[1].findIndex(it =>
+              it.countries.findIndex(that => that.flag == a.countries[0].flag) != -1 ||
+              it.countries.findIndex(that => that.flag == a.countries[1].flag) != -1
+          ) - periodTable.value[1].findIndex(it =>
+              it.countries.findIndex(that => that.flag == b.countries[0].flag) != -1 ||
+              it.countries.findIndex(that => that.flag == b.countries[1].flag) != -1
+          );
+        });
+      }
     }
     tableLoaded.value = true;
   }).catch((error) => {
