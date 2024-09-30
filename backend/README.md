@@ -16,7 +16,7 @@ docker build -t your-image-name .
 然后运行,这个前面的8888端口可以随便换
 
 ```
-docker run -d -p 8888:8888 your-image-name
+docker run -d -p 8888:6563 your-image-name
 ```
 
 ### Makefile

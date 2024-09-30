@@ -3,6 +3,8 @@ FROM docker.m.daocloud.io/library/node:20-alpine AS build
 # 复制 package.json 和 package-lock.json 到容器中
 COPY package*.json ./
 
+RUN npm config set registry https://registry.npmmirror.com/
+
 # 安装项目依赖
 RUN npm install
 
@@ -13,10 +15,12 @@ COPY . .
 RUN npm run build
 
 # 使用 Nginx 作为 Web 服务器
-FROM nginx:alpine
+FROM docker.m.daocloud.io/library/nginx:alpine
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # 将 Vue 项目的构建文件复制到 Nginx 的默认静态文件目录
-COPY --from=0 /dist /usr/share/nginx/html
+COPY --from=0 /dist /etc/nginx/html
 
 # 暴露端口
 EXPOSE 80

@@ -22,6 +22,6 @@ ENV service Olymipc
 WORKDIR /app
 COPY --from=builder /app/output /app/output
 
-EXPOSE 8888
+EXPOSE 6563
 
 CMD ["/app/output/main.exe"]
