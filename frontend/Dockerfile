@@ -3,6 +3,8 @@ FROM docker.m.daocloud.io/library/node:20-alpine AS build
 # 复制 package.json 和 package-lock.json 到容器中
 COPY package*.json ./
 
+RUN npm config set registry https://registry.npmmirror.com/
+
 # 安装项目依赖
 RUN npm install
 
