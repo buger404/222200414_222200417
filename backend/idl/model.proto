@@ -1,0 +1,90 @@
+syntax="proto3";
+//option go_package = "/user；";
+
+package model;
+
+message baseResp{
+  int64 code = 1;
+  string msg = 2;
+}
+
+message medalRank{
+  repeated medal details = 1;
+}
+
+message medal{
+  string countryName = 1;
+  string flag  = 2;
+  medals list = 3;
+}
+
+message medals{
+  int64 gold = 1;
+  int64 sliver = 2;
+  int64 bronze = 3;
+  int64 total = 4;
+}
+
+message dailyEvent{
+  repeated event events = 1;
+}
+
+message event{
+  string id = 1;
+  string time = 2;
+  string event = 3;
+  string group = 4;
+  repeated country countries = 5;
+  int64 winner = 6;
+}
+
+message country{
+  string name = 1;
+  string flag = 2;
+  string rating = 3;
+}
+
+message eventTypeLists{
+  repeated eventTypeList list = 1;
+}
+
+message eventTypeList{
+  string name = 1;
+  repeated eventType types = 2;
+}
+
+message eventType{
+  string id = 1;
+  string name = 2;
+}
+
+message eventTable{
+  repeated table tables = 1;
+}
+
+message table{
+  string title = 1;
+  string period = 2;
+  repeated country countries = 3;
+  int64 winner = 4;
+  string special = 5;
+}
+
+message eventLists{
+  repeated eventList event = 1;
+}
+
+message eventList{
+  string group_id = 1;
+  repeated contest contests = 2;
+}
+
+message contest{
+  string contest_id = 1;
+  string date = 2;
+  repeated country countries = 3;
+  int64 status = 4;
+}
+
+service ModelService{
+}

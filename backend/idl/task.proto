@@ -1,0 +1,59 @@
+syntax="proto3";
+//option go_package = "/user；";
+
+package task;
+
+import "model.proto";
+import "api.proto";
+
+message allMedalsReq{
+  string medalSorts = 1;
+}
+
+message allMedalsResp{
+  model.baseResp base = 1;
+  model.medalRank data = 2;
+}
+
+message dailyEventReq{
+  string date = 1;
+}
+
+message dailyEventResp{
+  model.baseResp base = 1;
+  model.dailyEvent data = 2;
+}
+
+message eventTypeListReq{
+}
+
+message eventTypeListResp{
+  model.baseResp base = 1;
+  model.eventTypeLists data = 2;
+}
+
+message eventTableReq{
+  string eventID = 1;
+}
+
+message eventTableResp{
+  model.baseResp base = 1;
+  model.eventTable data = 2;
+}
+
+message eventListReq{
+  string eventID = 1;
+}
+
+message eventListResp{
+  model.baseResp base = 1;
+  model.eventLists data = 2;
+}
+
+service TaskService{
+  rpc AllMedals(allMedalsReq) returns(allMedalsReq){option (api.get) = "api/medals/all";};
+  rpc DailyEvent(dailyEventReq) returns(dailyEventResp){option (api.get) = "api/event/daily";};
+  rpc EventTypeList(eventTypeListReq) returns(eventTypeListResp){option (api.get) = "api/event/typelist";};
+  rpc EventTable(eventTableReq) returns(eventTableResp){option (api.get) = "api/event/table";};
+  rpc EventList(eventListReq) returns(eventListResp){option (api.get) = "api/event/list";};
+}

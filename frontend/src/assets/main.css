@@ -1,10 +1,9 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   font-weight: normal;
+  height: 100vh;
 }
 
 a,
@@ -15,21 +14,23 @@ a,
   padding: 3px;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.25s ease-out;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+.slide-enter-to {
+  opacity: 1;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.slide-enter-from {
+  opacity: 0;
+}
+
+.slide-leave-to {
+  opacity: 0;
+}
+
+.slide-leave-from {
+  opacity: 1;
 }
