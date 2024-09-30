@@ -15,7 +15,7 @@ COPY . .
 RUN npm run build
 
 # 使用 Nginx 作为 Web 服务器
-FROM nginx:alpine
+FROM docker.m.daocloud.io/library/nginx:alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
