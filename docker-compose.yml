@@ -1,0 +1,18 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: ./frontend/.
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+  backend:
+    build:
+      context: ./backend/.
+      dockerfile: Dockerfile
+    ports:
+      - "6563:6563"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - frontend
